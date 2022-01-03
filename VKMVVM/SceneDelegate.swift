@@ -69,7 +69,11 @@ extension SceneDelegate: AuthServiceDelegate {
     }
     
     func authServiceSignIn() {
-        
+        let newsFeedVC = NewsFeedViewController()
+        let newsFeedModelView = NewsFeedModelView()
+        newsFeedVC.viewModel = newsFeedModelView
+        newsFeedModelView.delegate = newsFeedVC
+        window?.rootViewController = UINavigationController(rootViewController: newsFeedVC) 
     }
     
     func authServiceSignInDidFail() {
