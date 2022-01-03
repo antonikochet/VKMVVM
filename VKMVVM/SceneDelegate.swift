@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import VKSdkFramework
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,12 +14,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowScene)
+        let authService = AuthService.shared
+        let authVC = AuthViewController()
+        
+        authService.delegate = self
+        window?.rootViewController = authVC
+        
+        window?.makeKeyAndVisible()
+        authService.wakeUpSession()
     }
 
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            VKSdk.processOpen(url, fromApplication: UIApplication.OpenURLOptionsKey.sourceApplication.rawValue)
+        }
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -50,3 +63,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+extension SceneDelegate: AuthServiceDelegate {
+    func authServiceShouldShow(viewController: UIViewController) {
+        window?.rootViewController?.present(viewController, animated: true, completion: nil)
+    }
+    
+    func authServiceSignIn() {
+        
+    }
+    
+    func authServiceSignInDidFail() {
+        
+    }
+    
+    
+}
