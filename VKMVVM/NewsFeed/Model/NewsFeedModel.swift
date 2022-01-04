@@ -13,18 +13,16 @@ struct NewsFeedModel: NewsFeedModelItemType {
     var iconUrlString: String
     var name: String
     var date: String
-    var text: String?
     var likes: String?
     var comments: String?
     var shares: String?
     var views: String?
     var contentPost: ContentModelViewType
-    var photoAttachement: NewsFeedCellPhotoAttachementViewModelType?
 }
 
 struct NewsFeedContentPostModel: ContentModelViewType {
     var text: String?
-    var photo: NewsFeedCellPhotoAttachementViewModelType?
+    var photos: [NewsFeedCellPhotoAttachementViewModelType]
     var sizes: NewsFeedCellContentSizesType
 }
 

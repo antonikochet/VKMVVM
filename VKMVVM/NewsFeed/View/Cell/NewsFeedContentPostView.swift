@@ -9,7 +9,7 @@ import UIKit
 
 protocol ContentModelViewType {
     var text: String? { get }
-    var photo: NewsFeedCellPhotoAttachementViewModelType? { get }
+    var photos: [NewsFeedCellPhotoAttachementViewModelType] { get }
     var sizes: NewsFeedCellContentSizesType { get }
 }
 
@@ -36,6 +36,8 @@ class NewsFeedContentPostView: UIView {
         return imageView
     }()
     
+    private let galleryCollectionView = GalleryCollectionView()
+    
     private let moreTextButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
@@ -51,6 +53,7 @@ class NewsFeedContentPostView: UIView {
         addSubview(postLabel)
         addSubview(moreTextButton)
         addSubview(postImageView)
+        addSubview(galleryCollectionView)
     }
     
     required init?(coder: NSCoder) {
@@ -61,14 +64,23 @@ class NewsFeedContentPostView: UIView {
         postLabel.text = modelView.text
         
         postLabel.frame = modelView.sizes.postLabelFrame
-        postImageView.frame = modelView.sizes.attachmentFrame
         moreTextButton.frame = modelView.sizes.moreTextButtonFrame
         
-        if let photoAttachment = modelView.photo {
+        if let photoAttachment = modelView.photos.first, modelView.photos.count == 1 {
             postImageView.set(imageURL: photoAttachment.photoURLString)
             postImageView.isHidden = false
+            galleryCollectionView.isHidden = true
+            postImageView.frame = modelView.sizes.attachmentFrame
+            
+        } else if modelView.photos.count > 1 {
+            let galleryModelView = GalleryModelView(modelView.photos)
+            galleryCollectionView.modelView = galleryModelView
+            postImageView.isHidden = true
+            galleryCollectionView.isHidden = false
+            galleryCollectionView.frame = modelView.sizes.attachmentFrame
         } else {
             postImageView.isHidden = true
+            galleryCollectionView.isHidden = true
         }
     }
     

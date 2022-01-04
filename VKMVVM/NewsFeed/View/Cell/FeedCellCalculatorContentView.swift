@@ -15,7 +15,7 @@ class FeedCellCalculatorContentView {
         var totalHeight: CGFloat
     }
     
-    func sizesContentView(post: String?, photoAttachment: NewsFeedCellPhotoAttachementViewModelType?, isFullSizedPost: Bool) -> NewsFeedCellContentSizesType {
+    func sizesContentView(post: String?, photoAttachments: [NewsFeedCellPhotoAttachementViewModelType], isFullSizedPost: Bool) -> NewsFeedCellContentSizesType {
         let screenWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         var showMoreTextButton = false
         
@@ -58,19 +58,23 @@ class FeedCellCalculatorContentView {
         var attachementFrame: CGRect = CGRect(origin: CGPoint(x: 0, y: attachmentTop),
                                               size: CGSize.zero)
         
-        if let attachment = photoAttachment {
+        if let attachment = photoAttachments.first {
             let photoHeight: Float = Float(attachment.height)
             let photoWidth: Float = Float(attachment.width)
             let ratio = CGFloat(photoHeight / photoWidth)
             
-            attachementFrame.size = CGSize(width: screenWidth, height: screenWidth * ratio)
+            if photoAttachments.count == 1 {
+                attachementFrame.size = CGSize(width: screenWidth, height: screenWidth * ratio)
+            } else if photoAttachments.count > 1 {
+                attachementFrame.size = CGSize(width: screenWidth, height: screenWidth * ratio)
+            }
         }
         
         let totalHeight =   StaticSizesNewsFeedCell.topConstraintTopView +
                             StaticSizesNewsFeedCell.heightTopView +
                             attachmentTop +
                             attachementFrame.height +
-                            (photoAttachment != nil ? StaticSizesNewsFeedCell.bottomConstraintContentView : 0) +
+                            (photoAttachments.first != nil ? StaticSizesNewsFeedCell.bottomConstraintContentView : 0) +
                             StaticSizesNewsFeedCell.heightBottomView
         
         return FeedCellCalculatorContentView.NewsFeedContentSizes(postLabelFrame: postLabelFrame,

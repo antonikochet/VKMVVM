@@ -69,24 +69,22 @@ class NewsFeedModelView {
         let date = Date(timeIntervalSince1970: item.date)
         let dateTitle = dateFormatter.string(from: date)
         
-        let postPhoto = photoAttachment(item: item)
+        let postPhotos = photoAttachments(item: item)
         let isFullSized = revealPosts.contains(item.postId)
         
-        let sizeContent = FeedCellCalculatorContentView().sizesContentView(post: item.text, photoAttachment: postPhoto, isFullSizedPost: isFullSized)
+        let sizeContent = FeedCellCalculatorContentView().sizesContentView(post: item.text, photoAttachments: postPhotos, isFullSizedPost: isFullSized)
         
-        let contentPost = NewsFeedContentPostModel(text: item.text, photo: postPhoto, sizes: sizeContent)
+        let contentPost = NewsFeedContentPostModel(text: item.text, photos: postPhotos, sizes: sizeContent)
         
         return NewsFeedModel(postId: item.postId,
                              iconUrlString: profile.photo,
                              name: profile.name,
                              date: dateTitle,
-                             text: item.text,
                              likes: String(item.likes?.count ?? 0),
                              comments: String(item.comments?.count ?? 0),
                              shares: String(item.reposts?.count ?? 0),
                              views: String(item.views?.count ?? 0),
-                             contentPost: contentPost,
-                             photoAttachement: postPhoto)
+                             contentPost: contentPost)
                             
     }
     
@@ -104,6 +102,17 @@ class NewsFeedModelView {
             return nil
         }
         return NewsFeedCellPhotoAttachmentModel(photoURLString: firstPhoto.srcBIG, width: firstPhoto.width, height: firstPhoto.height)
+    }
+    
+    private func photoAttachments(item: NewsFeedItem) -> [NewsFeedCellPhotoAttachementViewModelType] {
+        guard let attachments = item.attachments else { return [] }
+        
+        return attachments.compactMap { (attachment) -> NewsFeedCellPhotoAttachementViewModelType? in
+            guard let photo = attachment.photo else { return nil }
+            return NewsFeedCellPhotoAttachmentModel(photoURLString: photo.srcBIG,
+                                                    width: photo.width,
+                                                    height: photo.height)
+        }
     }
 }
 
