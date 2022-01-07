@@ -13,14 +13,13 @@ class GalleryCollectionViewCell: UICollectionViewCell {
     private let imageView: WebImageView = {
         let imageView = WebImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(imageView)
-        backgroundColor = .purple
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
@@ -33,6 +32,15 @@ class GalleryCollectionViewCell: UICollectionViewCell {
         imageView.set(imageURL: imageUrl)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 10
+        layer.shadowRadius = 3
+        layer.shadowOpacity = 0.9
+        layer.shadowOffset = CGSize(width: 2.5, height: 4)
+    }
     override func prepareForReuse() {
         imageView.image = nil
     }

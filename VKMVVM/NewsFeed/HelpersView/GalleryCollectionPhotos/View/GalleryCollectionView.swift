@@ -16,9 +16,12 @@ class GalleryCollectionView: UICollectionView {
     }
     
     init() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        super.init(frame: .zero, collectionViewLayout: layout)
+        let rowLayout = RowLayout()
+        super.init(frame: .zero, collectionViewLayout: rowLayout)
+        rowLayout.delegate = self
+        
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
         
         delegate = self
         dataSource = self
@@ -46,4 +49,12 @@ extension GalleryCollectionView: UICollectionViewDataSource {
         cell.set(imageUrl: photo?.photoURLString)
         return cell
     }
+}
+
+extension GalleryCollectionView: RowLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, photoAtIndexPath indexPath: IndexPath) -> CGSize {
+        guard let photo = modelView?.get(by: indexPath.row) else { return CGSize.zero }
+        return CGSize(width: photo.width, height: photo.height)
+    }
+
 }

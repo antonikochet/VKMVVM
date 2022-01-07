@@ -10,7 +10,9 @@ import Foundation
 protocol NewsFeedModelViewType {
     var count: Int { get }
     func getItem(by index: Int) -> NewsFeedModelItemType?
+    func getFirstData()
     func updateData()
+    func getNextBatchNews()
     func revealPost(_ id: Int)
 }
 
@@ -26,6 +28,7 @@ class NewsFeedModelView {
     
     private var cells: [NewsFeedModelItemType] = []
     private var responseData: NewsFeedResponse?
+    private var newFromInProcess: String?
     
     private var revealPosts: [Int] = []
     
@@ -37,8 +40,11 @@ class NewsFeedModelView {
         return dateFormatter
     }()
     
-    private func getFeed() {
-        let params = [NewsFeedFiltersParams.name: NewsFeedFiltersParams.params(.phone, .post)]
+    private func getFeed(_ startFrom: String?) {
+        var params = [NewsFeedParams.filters.rawValue: NewsFeedFiltersParams.params(.phone, .post)]
+        if let startFrom = startFrom {
+            params[NewsFeedParams.startFrom.rawValue] = startFrom
+        }
         APIManager.shader.request(path: .getNewsFeed, params: params) { data, error in
             self.delegate?.willLoadData()
             guard error == nil else {
@@ -47,12 +53,42 @@ class NewsFeedModelView {
             }
             if let data = data {
                 let response = try! JSONDecoder().decode(NewsFeedResponseWrapped.self, from: data)
-                self.responseData = response.response
+                self.updateResponseData(response.response)
                 self.viewData()
                 self.delegate?.didLoadData()
             }
         }
 
+    }
+    
+    private func updateResponseData(_ newResponse: NewsFeedResponse?) {
+        if responseData == nil {
+            responseData = newResponse
+            newFromInProcess = newResponse?.nextFrom
+        } else {
+            guard newResponse?.nextFrom != responseData?.nextFrom, let newResponse = newResponse else { return }
+            responseData?.items.append(contentsOf: newResponse.items)
+        
+            var profiles = newResponse.profiles
+            if let oldProfiles = self.responseData?.profiles {
+                let oldProfilesFiltered = oldProfiles.filter { oldProfile in
+                    !newResponse.profiles.contains { $0.id == oldProfile.id } }
+                profiles.append(contentsOf: oldProfilesFiltered)
+            }
+            responseData?.profiles = profiles
+            
+            var groups = newResponse.groups
+            if let oldGroups = self.responseData?.groups {
+                let oldGroupsFiltered = oldGroups.filter { oldGroup in
+                    !newResponse.profiles.contains { $0.id == oldGroup.id } }
+                groups.append(contentsOf: oldGroupsFiltered)
+            }
+            responseData?.groups = groups
+            
+            responseData?.nextFrom = newResponse.nextFrom
+            newFromInProcess = newResponse.nextFrom
+        }
+        
     }
     
     private func viewData() {
@@ -80,12 +116,23 @@ class NewsFeedModelView {
                              iconUrlString: profile.photo,
                              name: profile.name,
                              date: dateTitle,
-                             likes: String(item.likes?.count ?? 0),
-                             comments: String(item.comments?.count ?? 0),
-                             shares: String(item.reposts?.count ?? 0),
-                             views: String(item.views?.count ?? 0),
+                             likes: formatterCounter(item.likes?.count),
+                             comments: formatterCounter(item.comments?.count),
+                             shares: formatterCounter(item.reposts?.count),
+                             views: formatterCounter(item.views?.count),
                              contentPost: contentPost)
                             
+    }
+    
+    private func formatterCounter(_ counter: Int?) -> String? {
+        guard let counter = counter else { return nil }
+        var counterString = String(counter)
+        if 4...6 ~= counterString.count {
+            counterString = String(counterString.dropLast(3)) + "K"
+        } else if counterString.count > 6 {
+            counterString = String(counterString.dropLast(6)) + "M"
+        }
+        return counterString
     }
     
     private func getProfile(for sourseId: Int, profiles: [Profile], groups: [Group]) -> ProfileRepresenatable {
@@ -93,15 +140,6 @@ class NewsFeedModelView {
         let normalSourseId = sourseId >= 0 ? sourseId : -sourseId
         let profileRepresenatable = profilesOrGroups.first { $0.id == normalSourseId }
         return profileRepresenatable!
-    }
-    
-    private func photoAttachment(item: NewsFeedItem) -> NewsFeedCellPhotoAttachementViewModelType? {
-        guard let photos = item.attachments?.compactMap({ (attachment) in
-            attachment.photo
-        }), let firstPhoto = photos.first else {
-            return nil
-        }
-        return NewsFeedCellPhotoAttachmentModel(photoURLString: firstPhoto.srcBIG, width: firstPhoto.width, height: firstPhoto.height)
     }
     
     private func photoAttachments(item: NewsFeedItem) -> [NewsFeedCellPhotoAttachementViewModelType] {
@@ -126,7 +164,9 @@ extension NewsFeedModelView: NewsFeedModelViewType {
     }
     
     func updateData() {
-        getFeed()
+        newFromInProcess = nil
+        responseData = nil
+        getFeed(nil)
     }
     
     func revealPost(_ id: Int) {
@@ -135,4 +175,11 @@ extension NewsFeedModelView: NewsFeedModelViewType {
         delegate?.didLoadData()
     }
     
+    func getFirstData() {
+        getFeed(nil)
+    }
+    
+    func getNextBatchNews() {
+        getFeed(newFromInProcess)
+    }
 }

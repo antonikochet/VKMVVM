@@ -15,6 +15,12 @@ struct NewsFeedResponse: Decodable {
     var items: [NewsFeedItem]
     var profiles: [Profile]
     var groups: [Group]
+    var nextFrom: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case items, profiles, groups
+        case nextFrom = "next_from"
+    }
 }
 
 struct NewsFeedItem: Decodable {

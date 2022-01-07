@@ -66,7 +66,9 @@ class FeedCellCalculatorContentView {
             if photoAttachments.count == 1 {
                 attachementFrame.size = CGSize(width: screenWidth, height: screenWidth * ratio)
             } else if photoAttachments.count > 1 {
-                attachementFrame.size = CGSize(width: screenWidth, height: screenWidth * ratio)
+                let photosSize = photoAttachments.map { CGSize(width: $0.width, height: $0.height) }
+                let rowHeight = RowLayout.rowHeightCouter(superviewWidth: screenWidth, photosArray: photosSize)
+                attachementFrame.size = CGSize(width: screenWidth, height: rowHeight!)
             }
         }
         

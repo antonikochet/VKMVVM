@@ -19,18 +19,36 @@ class NewsFeedViewController: UIViewController {
         return tableView
     }()
 
+    private let refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        refresh.addTarget(self, action: #selector(refreshFeed), for: .valueChanged)
+        return refresh
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Новости"
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.addSubview(refreshControl)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
+        viewModel.getFirstData()
+    }
+    
+    @objc private func refreshFeed() {
         viewModel.updateData()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentOffset.y > scrollView.contentSize.height / 1.1 {
+            viewModel.getNextBatchNews()
+        }
     }
 }
 
@@ -64,6 +82,7 @@ extension NewsFeedViewController: NewsFeedModelViewDelegate {
         print(#function)
         DispatchQueue.main.async {
             self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
     

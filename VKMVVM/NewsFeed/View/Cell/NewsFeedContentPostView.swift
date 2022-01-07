@@ -22,12 +22,18 @@ protocol NewsFeedCellContentSizesType {
 
 class NewsFeedContentPostView: UIView {
 
-    private let postLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = StaticSizesNewsFeedCell.postLabelFont
-        label.textColor = .black
-        return label
+    private let postLabel: UITextView = {
+        let textView = UITextView()
+        textView.font = StaticSizesNewsFeedCell.postLabelFont
+        textView.isScrollEnabled = false
+        textView.isSelectable = true
+        textView.isUserInteractionEnabled = true
+        textView.isEditable = false
+        
+        let padding = textView.textContainer.lineFragmentPadding
+        textView.textContainerInset = UIEdgeInsets(top: 0, left: -padding, bottom: 0, right: -padding)
+        textView.dataDetectorTypes = UIDataDetectorTypes.all
+        return textView
     }()
     
     private let postImageView: WebImageView = {
