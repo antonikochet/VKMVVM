@@ -9,7 +9,7 @@ import UIKit
 
 class NewsFeedViewController: UIViewController {
 
-    var viewModel: NewsFeedModelViewType!
+    var viewModel: NewsFeedViewModelType!
 
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -73,7 +73,7 @@ extension NewsFeedViewController: UITableViewDelegate {
     }
 }
 
-extension NewsFeedViewController: NewsFeedModelViewDelegate {
+extension NewsFeedViewController: NewsFeedViewModelDelegate {
     func willLoadData() {
         print(#function)
     }

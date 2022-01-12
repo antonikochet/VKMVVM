@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol NewsFeedModelViewType {
+protocol NewsFeedViewModelType {
     var count: Int { get }
     func getItem(by index: Int) -> NewsFeedModelItemType?
     func getFirstData()
@@ -16,15 +16,15 @@ protocol NewsFeedModelViewType {
     func revealPost(_ id: Int)
 }
 
-protocol NewsFeedModelViewDelegate: AnyObject {
+protocol NewsFeedViewModelDelegate: AnyObject {
     func willLoadData()
     func didLoadData()
     func showError(_ error: Error)
 }
 
-class NewsFeedModelView {
+class NewsFeedViewModel {
     
-    weak var delegate: NewsFeedModelViewDelegate?
+    weak var delegate: NewsFeedViewModelDelegate?
     
     private var cells: [NewsFeedModelItemType] = []
     private var responseData: NewsFeedResponse?
@@ -105,6 +105,8 @@ class NewsFeedModelView {
         let date = Date(timeIntervalSince1970: item.date)
         let dateTitle = dateFormatter.string(from: date)
         
+        let topModelView = TopRecordingModel(iconUrlString: profile.photo, name: profile.name, date: dateTitle)
+        
         let postPhotos = photoAttachments(item: item)
         let isFullSized = revealPosts.contains(item.postId)
         
@@ -113,9 +115,7 @@ class NewsFeedModelView {
         let contentPost = NewsFeedContentPostModel(text: item.text, photos: postPhotos, sizes: sizeContent)
         
         return NewsFeedModel(postId: item.postId,
-                             iconUrlString: profile.photo,
-                             name: profile.name,
-                             date: dateTitle,
+                             topModelView: topModelView,
                              likes: formatterCounter(item.likes?.count),
                              comments: formatterCounter(item.comments?.count),
                              shares: formatterCounter(item.reposts?.count),
@@ -154,7 +154,7 @@ class NewsFeedModelView {
     }
 }
 
-extension NewsFeedModelView: NewsFeedModelViewType {
+extension NewsFeedViewModel: NewsFeedViewModelType {
     var count: Int {
         return cells.count
     }

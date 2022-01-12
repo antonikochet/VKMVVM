@@ -8,9 +8,7 @@
 import UIKit
 
 protocol NewsFeedModelItemType {
-    var iconUrlString: String { get }
-    var name: String { get }
-    var date: String { get }
+    var topModelView: TopRecordingModelViewType { get }
     var likes: String? { get }
     var comments: String? { get }
     var shares: String? { get }
@@ -35,28 +33,10 @@ class NewsFeedViewCell: UITableViewCell {
     weak var delegate: NewsFeedCellDelegate?
     
     //MARK: - topView
-    private let iconImageView: WebImageView = {
-        let imageView = WebImageView()
-        imageView.backgroundColor = .blue
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Name"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
-    
-    private let dateLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Date"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .systemGray2
-        label.font = UIFont.systemFont(ofSize: 12)
-        return label
+    private let topView: TopRecordingView = {
+        let view = TopRecordingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     //MARK: - bottomView
@@ -106,7 +86,6 @@ class NewsFeedViewCell: UITableViewCell {
         selectionStyle = .none
         sendSubviewToBack(contentView)
         
-        let topView = createTopView()
         createBottomView()
         
         addSubview(topView)
@@ -135,9 +114,7 @@ class NewsFeedViewCell: UITableViewCell {
     }
     
     func set(_ viewModel: NewsFeedModelItemType) {
-        iconImageView.set(imageURL: viewModel.iconUrlString)
-        nameLabel.text = viewModel.name
-        dateLabel.text = viewModel.date
+        topView.set(modelView: viewModel.topModelView)
         likesView.set(text: viewModel.likes)
         commentsView.set(text: viewModel.comments)
         repostsView.set(text: viewModel.shares)
@@ -146,38 +123,8 @@ class NewsFeedViewCell: UITableViewCell {
         contentPostView.set(modelView: viewModel.contentPost)
     }
     
-    //MARK: - create top and bottom views
-    private func createTopView() -> UIView {
-        let topView = UIView()
-        topView.addSubview(iconImageView)
-        topView.addSubview(nameLabel)
-        topView.addSubview(dateLabel)
-        topView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.layer.cornerRadius = StaticSizesNewsFeedCell.heightTopView/2
-        iconImageView.clipsToBounds = true
-        let topConstraintNameLabel: CGFloat = 2
-        
-        NSLayoutConstraint.activate([
-            iconImageView.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 8),
-            iconImageView.topAnchor.constraint(equalTo: topView.topAnchor),
-            iconImageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightTopView),
-            
-            nameLabel.topAnchor.constraint(equalTo: topView.topAnchor, constant: topConstraintNameLabel),
-            nameLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
-            nameLabel.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -8),
-            nameLabel.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightTopView/2 - topConstraintNameLabel),
-            
-            dateLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
-            dateLabel.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -8),
-            dateLabel.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -2),
-            dateLabel.heightAnchor.constraint(equalToConstant: 14)
-        ])
-
-        return topView
-    }
-    
-    private func createBottomView() {
+    //MARK: - create bottom view
+   private func createBottomView() {
         bottomView.addSubview(likesView)
         bottomView.addSubview(commentsView)
         bottomView.addSubview(repostsView)
