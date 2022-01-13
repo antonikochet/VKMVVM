@@ -14,7 +14,6 @@ class NewsFeedViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .purple
         tableView.register(NewsFeedViewCell.self, forCellReuseIdentifier: NewsFeedViewCell.identifier)
         return tableView
     }()
@@ -28,17 +27,28 @@ class NewsFeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Новости"
+        navigationItem.titleView?.backgroundColor = .clear
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.addSubview(refreshControl)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
         viewModel.getFirstData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.hidesBarsOnSwipe = false
     }
     
     @objc private func refreshFeed() {
@@ -96,5 +106,15 @@ extension NewsFeedViewController: NewsFeedCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell),
               let cellViewModel = viewModel.getItem(by: indexPath.row) as? NewsFeedModel else { return }
         viewModel.revealPost(cellViewModel.postId)
+    }
+    
+    func showDetailGalleryPhotos(for cell: NewsFeedViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell),
+              let cellViewModel = viewModel.getItem(by: indexPath.row) as? NewsFeedModel else { return }
+
+        let galleryModelView = DetailGalleryPhotosModelView(cellViewModel.contentPost.photos)
+        let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: 0) //TODO: добавить опредление индекса нажатой фотографии
+
+        navigationController?.pushViewController(galleryVC, animated: true)
     }
 }

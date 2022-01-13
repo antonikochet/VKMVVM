@@ -24,6 +24,7 @@ protocol NewsFeedCellPhotoAttachementViewModelType {
 
 protocol NewsFeedCellDelegate: AnyObject {
     func revealPost(for cell: NewsFeedViewCell)
+    func showDetailGalleryPhotos(for cell: NewsFeedViewCell)
 }
 
 class NewsFeedViewCell: UITableViewCell {
@@ -92,6 +93,8 @@ class NewsFeedViewCell: UITableViewCell {
         addSubview(contentPostView)
         addSubview(bottomView)
         
+        contentPostView.addGestureRecognizerForAttachment(target: self,action: #selector(showDetailGalleryPhotos))
+        
         NSLayoutConstraint.activate([
             topView.topAnchor.constraint(equalTo: topAnchor, constant: StaticSizesNewsFeedCell.topConstraintTopView),
             topView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -154,5 +157,9 @@ class NewsFeedViewCell: UITableViewCell {
     
     @objc func moreTextButtonTouch() {
         delegate?.revealPost(for: self)
+    }
+    
+    @objc func showDetailGalleryPhotos() {
+        delegate?.showDetailGalleryPhotos(for: self)
     }
 }

@@ -32,7 +32,10 @@ class ElementBottomView: UIView {
         return label
     }()
     
-    init(nameImage: NameImageBottomView) {
+    private var centerPositionSubviewsFlag: Bool
+    
+    init(nameImage: NameImageBottomView, centerPositionSubviewsFlag: Bool = false) {
+        self.centerPositionSubviewsFlag = centerPositionSubviewsFlag
         super.init(frame: .zero)
         addSubview(imageView)
         addSubview(textLabel)
@@ -51,12 +54,17 @@ class ElementBottomView: UIView {
     }
     
     override func updateConstraints() {
+        if centerPositionSubviewsFlag {
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -16).isActive = true
+        } else {
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2).isActive = true
+        }
+        
         NSLayoutConstraint.activate([
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightBottomView/2),
             imageView.widthAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightBottomView/2),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
-        
+            
             textLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             textLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 2),
             textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)])

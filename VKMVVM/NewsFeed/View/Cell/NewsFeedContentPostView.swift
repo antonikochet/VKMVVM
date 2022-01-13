@@ -93,4 +93,12 @@ class NewsFeedContentPostView: UIView {
     func addTargetMoreTextButton(_ target: Any?, selector: Selector) {
         moreTextButton.addTarget(target, action: selector, for: .touchUpInside)
     }
+    
+    func addGestureRecognizerForAttachment(target: Any, action: Selector) {
+        postImageView.isUserInteractionEnabled = true
+        let gestureImage = UITapGestureRecognizer(target: target, action: action)
+        let gestureGallery = UITapGestureRecognizer(target: target, action: action)
+        postImageView.addGestureRecognizer(gestureImage)
+        galleryCollectionView.addGestureRecognizer(gestureGallery)
+    }
 }
