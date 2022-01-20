@@ -13,6 +13,7 @@ class NewsFeedViewController: UIViewController {
 
     private let tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = UIColor(named: "NewsFeedTable")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NewsFeedViewCell.self, forCellReuseIdentifier: NewsFeedViewCell.identifier)
         return tableView
@@ -28,6 +29,7 @@ class NewsFeedViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "Новости"
         navigationItem.titleView?.backgroundColor = .clear
+        view.backgroundColor = UIColor.init(named: "NewsFeedView")
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self

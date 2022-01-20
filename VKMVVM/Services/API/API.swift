@@ -15,6 +15,8 @@ struct API {
 
 enum APIMethods: String {
     case getNewsFeed = "newsfeed.get"
+    case getUsers = "users.get"
+    case getFriends = "friends.get"
     
     var path: String {
         return "/method/" + self.rawValue

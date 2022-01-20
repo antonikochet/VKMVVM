@@ -97,7 +97,9 @@ class NewsFeedViewModel {
               let groups = responseData?.groups else { return }
         cells = items.map({ item in
             cellViewModel(from: item, profiles: profiles, groups: groups)
-        })
+        }).filter {
+            $0.contentPost.photos.count != 0 && !$0.contentPost.text!.isEmpty
+        }
     }
     
     private func cellViewModel(from item: NewsFeedItem, profiles: [Profile], groups: [Group]) -> NewsFeedModelItemType {
