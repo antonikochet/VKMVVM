@@ -41,7 +41,7 @@ class NewsFeedViewModel {
     }()
     
     private func getFeed(_ startFrom: String?) {
-        var params = [NewsFeedParams.filters.rawValue: NewsFeedFiltersParams.params(.phone, .post)]
+        var params = [NewsFeedParams.filters.rawValue: NewsFeedFiltersParams.params([.phone, .post])]
         if let startFrom = startFrom {
             params[NewsFeedParams.startFrom.rawValue] = startFrom
         }

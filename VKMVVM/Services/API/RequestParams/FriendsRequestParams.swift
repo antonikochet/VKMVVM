@@ -21,13 +21,15 @@ enum FriendsRequestOrderParams: String {
     case name
 }
 
-enum FriendsRequestFieldsParams: String {
+enum FriendsRequestFieldsParams: String, CaseIterable {
     case photo100 = "photo_100"
     case city
     case online
     case has_mobile
     
-    static func params(_ array: FriendsRequestFieldsParams...) -> String {
+    static func params(_ array: [FriendsRequestFieldsParams]) -> String {
         return array.map { $0.rawValue }.joined(separator: ",")
     }
+    
+    static var allParams = params(Self.allCases)
 }

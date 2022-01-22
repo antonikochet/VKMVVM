@@ -10,10 +10,10 @@ import UIKit
 struct CalculatorSizes {
     static func calculateSizeBriefUserInfo(viewModel: BriefUserInfoViewModelType) -> Int {
         var count: CGFloat = 0
-        count += viewModel.city != nil ? 1 : 0
-        count += viewModel.education != nil ? 1 : 0
-        count += viewModel.work != nil ? 1 : 0
-        count += viewModel.followes != nil ? 1 : 0
+        count += viewModel.city != nil && !viewModel.city!.isEmpty ? 1 : 0
+        count += viewModel.education != nil && !viewModel.education!.isEmpty ? 1 : 0
+        count += viewModel.work != nil && !viewModel.work!.isEmpty ? 1 : 0
+        count += viewModel.followes != nil && !viewModel.followes!.isEmpty ? 1 : 0
         
         let briefInfoButton = StaticSizesPageProfileCell.heightBriefUserLabel + StaticSizesPageProfileCell.spacingBriefUserLabel
         let paddingStackView = StaticSizesPageProfileCell.paddingBriefUserStack

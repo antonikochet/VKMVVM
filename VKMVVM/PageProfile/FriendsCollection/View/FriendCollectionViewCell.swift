@@ -11,6 +11,8 @@ protocol FriendCellViewModelType {
     var iconUrl: String? { get }
     var firstName: String { get }
     var lastName: String { get }
+    var isOnline: Bool { get }
+    var isOnlineMobile: Bool { get }
 }
 
 class FriendCollectionViewCell: UICollectionViewCell {
@@ -43,11 +45,18 @@ class FriendCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let onlineImage: OnlineImageView = {
+        let imageView = OnlineImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(iconImage)
         addSubview(firstNameLabel)
         addSubview(lastNameLabel)
+        addSubview(onlineImage)
         
         NSLayoutConstraint.activate([
             iconImage.topAnchor.constraint(equalTo: topAnchor, constant: 2),
@@ -62,7 +71,12 @@ class FriendCollectionViewCell: UICollectionViewCell {
             lastNameLabel.topAnchor.constraint(equalTo: firstNameLabel.topAnchor, constant: 2),
             lastNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             lastNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            lastNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)])
+            lastNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+        
+            onlineImage.trailingAnchor.constraint(equalTo: iconImage.trailingAnchor),
+            onlineImage.bottomAnchor.constraint(equalTo: iconImage.bottomAnchor),
+            onlineImage.heightAnchor.constraint(equalToConstant: 15),
+            onlineImage.widthAnchor.constraint(equalToConstant: 15)])
     }
     
     required init?(coder: NSCoder) {
@@ -80,5 +94,6 @@ class FriendCollectionViewCell: UICollectionViewCell {
         iconImage.set(imageURL: viewModel.iconUrl)
         firstNameLabel.text = viewModel.firstName
         lastNameLabel.text = viewModel.lastName
+        onlineImage.set(online: viewModel.isOnline, has_phone: viewModel.isOnlineMobile)
     }
 }

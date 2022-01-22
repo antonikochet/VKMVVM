@@ -78,6 +78,7 @@ extension PageProfileViewController: UITableViewDataSource {
                 let custemCell = tableView.dequeueReusableCell(withIdentifier: FriendsViewCell.identifier, for: indexPath) as! FriendsViewCell
                 if let viewModel = viewModel?.getFriendsList() {
                     custemCell.set(viewModel: viewModel)
+                    custemCell.delegate = self
                 }
                 return custemCell
             default:
@@ -100,5 +101,23 @@ extension PageProfileViewController: UITableViewDelegate {
             default:
                 return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath {
+            case IndexPath(row: 2, section: 0):
+                let response = viewModel?.getFriendsResponse()
+                let frindsTableVC = Configurator.configuratorFriendsTable(friends: response)
+                navigationController?.pushViewController(frindsTableVC, animated: true)
+            default:
+                return
+        }
+    }
+}
+
+extension PageProfileViewController: FriendsViewCellDelegate {
+    func showFriend(by id: Int) {
+        let pageFriendsVC = Configurator.configuratorPageProfile(userId: String(id))
+        navigationController?.pushViewController(pageFriendsVC, animated: true)
     }
 }

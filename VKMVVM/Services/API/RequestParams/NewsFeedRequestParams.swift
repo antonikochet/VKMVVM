@@ -10,7 +10,7 @@ import Foundation
 enum NewsFeedFiltersParams: String {
     case phone, post
 
-    static func params(_ array: NewsFeedFiltersParams...) -> String {
+    static func params(_ array: [NewsFeedFiltersParams]) -> String {
         return array.map { $0.rawValue }.joined(separator: ",")
     }
 }

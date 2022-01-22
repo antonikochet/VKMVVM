@@ -11,6 +11,7 @@ struct HeaderProfileCellModel: HeaderProfileCellViewModelType {
     var iconUrl: String?
     var fullName: String
     var userStatus: String
+    var onlineStatus: String
 }
 
 struct BriefUserInfoCellModel: BriefUserInfoViewModelType {
@@ -23,4 +24,14 @@ struct BriefUserInfoCellModel: BriefUserInfoViewModelType {
 struct FriendsList: FriendsListViewModelType {
     var countFriends: Int
     var friendsList: [FriendCellViewModelType]
+}
+
+struct FriendCellViewModel: FriendCellViewModelType {
+    var id: Int
+    
+    var iconUrl: String?
+    var firstName: String
+    var lastName: String
+    var isOnline: Bool
+    var isOnlineMobile: Bool
 }

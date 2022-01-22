@@ -11,6 +11,7 @@ protocol HeaderProfileCellViewModelType {
     var iconUrl: String? { get }
     var fullName: String { get }
     var userStatus: String { get }
+    var onlineStatus: String { get }
 }
 
 class HeaderProfileTableViewCell: UITableViewCell {
@@ -41,6 +42,15 @@ class HeaderProfileTableViewCell: UITableViewCell {
         return label
     }()
     
+    private let onlineLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
+        label.numberOfLines = 1
+        label.textColor = UIColor(named: "briefLabelColor")
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -48,6 +58,7 @@ class HeaderProfileTableViewCell: UITableViewCell {
         contentView.addSubview(iconImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(statusLabel)
+        contentView.addSubview(onlineLabel)
         
         let iconHeight = StaticSizesPageProfileCell.heigthHeaderProfileCell - 8 - 8
         iconImageView.layer.cornerRadius = iconHeight / 2
@@ -59,13 +70,17 @@ class HeaderProfileTableViewCell: UITableViewCell {
             iconImageView.widthAnchor.constraint(equalToConstant: iconHeight),
             iconImageView.heightAnchor.constraint(equalToConstant: iconHeight),
         
-            nameLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
             nameLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: -16),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
-            statusLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
+            statusLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
             statusLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: 8),
-            statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)])
+            statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            
+            onlineLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
+            onlineLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
+            onlineLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)])
         
     }
 
@@ -77,6 +92,7 @@ class HeaderProfileTableViewCell: UITableViewCell {
         iconImageView.set(imageURL: viewModel.iconUrl)
         nameLabel.text = viewModel.fullName
         statusLabel.text = viewModel.userStatus
+        onlineLabel.text = viewModel.onlineStatus
     }
 
 }

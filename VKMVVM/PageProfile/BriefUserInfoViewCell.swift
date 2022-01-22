@@ -70,7 +70,7 @@ class BriefUserInfoViewCell: UITableViewCell {
     }
     
     private func setView(_ view: DetailInfoButton, text: String?) {
-        if let text = text {
+        if let text = text, !text.isEmpty {
             view.set(text: text)
             view.isHidden = false
         } else {

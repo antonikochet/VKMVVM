@@ -12,9 +12,21 @@ protocol FriendsListViewModelType {
     var friendsList: [FriendCellViewModelType] { get }
 }
 
+protocol FriendsViewCellDelegate: AnyObject {
+    func showFriend(by id: Int)
+}
+
 class FriendsViewCell: UITableViewCell {
 
     static let identifier = "FriendsViewCell"
+    
+    weak var delegate: FriendsViewCellDelegate?
+    
+    private var viewModel: FriendsListViewModelType? {
+        didSet {
+            friendsCollectionView.reloadData()
+        }
+    }
     
     private let label: UILabel = {
         let label = UILabel()
@@ -32,15 +44,27 @@ class FriendsViewCell: UITableViewCell {
         return label
     }()
     
-    private let collectionView = FriendsCollectionView()
-    
+    private let friendsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collView.register(FriendCollectionViewCell.self, forCellWithReuseIdentifier: FriendCollectionViewCell.identifier)
+        collView.showsHorizontalScrollIndicator = false
+        collView.showsVerticalScrollIndicator = false
+        collView.translatesAutoresizingMaskIntoConstraints = false
+        return collView
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         
         contentView.addSubview(label)
         contentView.addSubview(countFriendsLabel)
-        contentView.addSubview(collectionView)
+        contentView.addSubview(friendsCollectionView)
+        
+        friendsCollectionView.delegate = self
+        friendsCollectionView.dataSource = self
         
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
@@ -48,11 +72,11 @@ class FriendsViewCell: UITableViewCell {
             
             countFriendsLabel.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
             countFriendsLabel.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-            
-            collectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
-            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+
+            friendsCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
+            friendsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            friendsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            friendsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
@@ -62,7 +86,38 @@ class FriendsViewCell: UITableViewCell {
     
     func set(viewModel: FriendsListViewModelType) {
         countFriendsLabel.text = viewModel.countFriends.description
-        let collViewModel = FriendsCollectionViewModel(viewModel.friendsList)
-        collectionView.viewModel = collViewModel
+        self.viewModel = viewModel
+    }
+}
+
+extension FriendsViewCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel?.countFriends ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FriendCollectionViewCell.identifier, for: indexPath) as! FriendCollectionViewCell
+        if let friendViewModel = viewModel?.friendsList[indexPath.row] {
+            cell.set(viewModel: friendViewModel)
+        }
+        return cell
+    }
+}
+
+extension FriendsViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let friendViewModel = viewModel?.friendsList[indexPath.row] as? FriendCellViewModel {
+            delegate?.showFriend(by: friendViewModel.id)
+        }
+    }
+}
+
+extension FriendsViewCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width / 5, height: collectionView.frame.height)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
     }
 }

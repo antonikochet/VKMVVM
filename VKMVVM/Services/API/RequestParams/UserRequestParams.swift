@@ -12,15 +12,18 @@ enum UserRequestParams: String {
     case fields
 }
 
-enum UserRequestFieldsParams: String {
+enum UserRequestFieldsParams: String, CaseIterable {
     case birthdayData = "bdate"
     case screenName = "screen_name"
     case HomeTown = "home_town"
     case photo100 = "photo_100"
     case followersCount = "followers_count"
-    case sex, education
+    case lastSeen = "last_seen"
+    case sex, education, online
     
-    static func params(_ array: UserRequestFieldsParams...) -> String {
+    static func params(_ array: [Self]) -> String {
         return array.map { $0.rawValue }.joined(separator: ",")
     }
+    
+    static let allFieldsParams: String = params(Self.allCases)
 }
