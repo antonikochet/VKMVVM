@@ -99,7 +99,7 @@ extension NewsFeedViewController: NewsFeedViewModelDelegate {
     }
     
     func showError(_ error: Error) {
-        print(error.localizedDescription)
+        print(error)
     }
 }
 

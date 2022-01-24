@@ -16,6 +16,7 @@ class PageProfileViewController: UIViewController {
         tableView.register(HeaderProfileTableViewCell.self, forCellReuseIdentifier: HeaderProfileTableViewCell.identifier)
         tableView.register(BriefUserInfoViewCell.self, forCellReuseIdentifier: BriefUserInfoViewCell.identifier)
         tableView.register(FriendsViewCell.self, forCellReuseIdentifier: FriendsViewCell.identifier)
+        tableView.register(ClosedTableViewCell.self, forCellReuseIdentifier: ClosedTableViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -46,7 +47,7 @@ extension PageProfileViewController: PageProfileViewModelDelegate {
     }
 
     func showError(error: Error) {
-        
+        print(error)
     }
 }
 
@@ -75,12 +76,18 @@ extension PageProfileViewController: UITableViewDataSource {
                 }
                 return custemCell
             case IndexPath(row: 2, section: 0):
-                let custemCell = tableView.dequeueReusableCell(withIdentifier: FriendsViewCell.identifier, for: indexPath) as! FriendsViewCell
-                if let viewModel = viewModel?.getFriendsList() {
-                    custemCell.set(viewModel: viewModel)
-                    custemCell.delegate = self
+                if viewModel?.isClosed ?? false {
+                    let custemCell = tableView.dequeueReusableCell(withIdentifier: ClosedTableViewCell.identifier, for: indexPath) as! ClosedTableViewCell
+                    custemCell.set(isDeleted: viewModel?.isDeleted ?? false)
+                    return custemCell
+                } else {
+                    let custemCell = tableView.dequeueReusableCell(withIdentifier: FriendsViewCell.identifier, for: indexPath) as! FriendsViewCell
+                    if let viewModel = viewModel?.getFriendsList() {
+                        custemCell.set(viewModel: viewModel)
+                        custemCell.delegate = self
+                    }
+                    return custemCell
                 }
-                return custemCell
             default:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                 return cell
@@ -97,7 +104,11 @@ extension PageProfileViewController: UITableViewDelegate {
                 guard let viewModel = viewModel?.getBriefUserInfo() else { return 0 }
                 return CGFloat(CalculatorSizes.calculateSizeBriefUserInfo(viewModel: viewModel))
             case IndexPath(row: 2, section: 0):
-                return StaticSizesPageProfileCell.heightFriendsCell
+                if viewModel?.isClosed ?? false {
+                    return StaticSizesPageProfileCell.heightClosedCell
+                } else {
+                    return StaticSizesPageProfileCell.heightFriendsCell
+                }
             default:
                 return 0
         }

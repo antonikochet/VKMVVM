@@ -70,6 +70,7 @@ extension SceneDelegate: AuthServiceDelegate {
     
     func authServiceSignIn() {
         let pageProfileVC = Configurator.configuratorPageProfile(userId: nil)
+//        let newsFeedVC = Configurator.configuratorNewsFeed()
         window?.rootViewController = UINavigationController(rootViewController: pageProfileVC)
     }
     

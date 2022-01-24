@@ -13,4 +13,5 @@ struct StaticSizesPageProfileCell {
     static let paddingBriefUserStack: UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
     static let spacingBriefUserLabel: CGFloat = 8
     static let heightFriendsCell: CGFloat = 160
+    static let heightClosedCell: CGFloat = 120
 }

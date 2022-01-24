@@ -28,6 +28,7 @@ class NewsFeedViewModel {
     
     private var cells: [NewsFeedModelItemType] = []
     private var responseData: NewsFeedResponse?
+    private var dataFetcher: DataFetcher
     private var newFromInProcess: String?
     
     private var revealPosts: [Int] = []
@@ -40,25 +41,21 @@ class NewsFeedViewModel {
         return dateFormatter
     }()
     
-    private func getFeed(_ startFrom: String?) {
-        var params = [NewsFeedParams.filters.rawValue: NewsFeedFiltersParams.params([.phone, .post])]
-        if let startFrom = startFrom {
-            params[NewsFeedParams.startFrom.rawValue] = startFrom
-        }
-        APIManager.shader.request(path: .getNewsFeed, params: params) { data, error in
-            self.delegate?.willLoadData()
-            guard error == nil else {
-                self.delegate?.showError(error!)
-                return
-            }
-            if let data = data {
-                let response = try! JSONDecoder().decode(NewsFeedResponseWrapped.self, from: data)
-                self.updateResponseData(response.response)
-                self.viewData()
-                self.delegate?.didLoadData()
+    init(dataFetcher: DataFetcher = NetworkDataFetcher()) {
+        self.dataFetcher = dataFetcher
+    }
+    
+    private func getNewsFeed(_ startFrom: String?) {
+        dataFetcher.getNewsFeed(startFrom: startFrom, paramsFilter: [.phone, .post]) { result in
+            switch result {
+                case .success(let response):
+                    self.updateResponseData(response.response)
+                    self.viewData()
+                    self.delegate?.didLoadData()
+                case .failure(let error):
+                    self.delegate?.showError(error)
             }
         }
-
     }
     
     private func updateResponseData(_ newResponse: NewsFeedResponse?) {
@@ -168,7 +165,7 @@ extension NewsFeedViewModel: NewsFeedViewModelType {
     func updateData() {
         newFromInProcess = nil
         responseData = nil
-        getFeed(nil)
+        getNewsFeed(nil)
     }
     
     func revealPost(_ id: Int) {
@@ -178,10 +175,10 @@ extension NewsFeedViewModel: NewsFeedViewModelType {
     }
     
     func getFirstData() {
-        getFeed(nil)
+        getNewsFeed(nil)
     }
     
     func getNextBatchNews() {
-        getFeed(newFromInProcess)
+        getNewsFeed(newFromInProcess)
     }
 }

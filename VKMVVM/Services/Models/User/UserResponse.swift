@@ -16,8 +16,8 @@ struct UserResponse: Decodable {
     let firstName: String
     let lastName: String
     let deactivated: String?
-    let isClosed: Bool?
-    let canAccessClosed: Bool?
+    @DecodableBool var isClosed: Bool
+    @DecodableBool var canAccessClosed: Bool
     
     //MARK: - option property
     let screenName: String?
@@ -77,4 +77,22 @@ struct LastSeen: Decodable {
 struct City: Decodable {
     let id: Int
     let title: String
+}
+
+@propertyWrapper
+struct DecodableBool {
+    var wrappedValue = false
+}
+
+extension DecodableBool: Decodable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        wrappedValue = try container.decode(Bool.self)
+    }
+}
+
+extension KeyedDecodingContainer {
+    func decode(_ type: DecodableBool.Type, forKey key: Key) throws -> DecodableBool {
+        try decodeIfPresent(type, forKey: key) ?? .init()
+    }
 }

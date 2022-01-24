@@ -13,6 +13,8 @@ protocol PageProfileViewModelType {
     func getBriefUserInfo() -> BriefUserInfoViewModelType?
     func getFriendsList() -> FriendsListViewModelType?
     func getFriendsResponse() -> FriendsResponse?
+    var isClosed: Bool { get }
+    var isDeleted: Bool { get }
 }
 
 protocol PageProfileViewModelDelegate: AnyObject {
@@ -25,7 +27,10 @@ class PageProfileViewModel {
     
     private var response: UserResponse?
     private var friendsResponse: FriendsResponse?
+    private var dataFetcher: DataFetcher
     private var userId: String?
+    private var isClosePage: Bool = true
+    private var isDeactivated: Bool = false
     
     private var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -34,44 +39,45 @@ class PageProfileViewModel {
         return dateFormatter
     }()
     
-    init(userId: String? = nil) {
+    init(userId: String? = nil, dataFetcher: DataFetcher = NetworkDataFetcher()) {
         self.userId = userId
+        self.dataFetcher = dataFetcher
     }
     
     private func getProfileInformation() {
-        let fieldsParams = UserRequestFieldsParams.allFieldsParams
-        var params = [UserRequestParams.fields.rawValue: fieldsParams]
-        if let userId = userId {
-            params[UserRequestParams.userIds.rawValue] = userId
-        }
-        APIManager.shader.request(path: .getUsers, params: params) { data, error in
-            guard error == nil else {
-                self.delegate?.showError(error: error!)
-                return
-            }
-            if let data = data {
-                let response = try! JSONDecoder().decode(UserResponseWrapper.self, from: data)
-                self.response = response.response.first
-                self.delegate?.didLoadData()
+        let fieldsParams = UserRequestFieldsParams.allCases
+        
+        dataFetcher.getProfileInfo(userId: userId, fieldsParams: fieldsParams) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .success(let response):
+                    self.response = response.response.first
+                    if let response = self.response {
+                        self.isClosePage = !response.canAccessClosed
+                        self.isDeactivated = response.deactivated != nil
+                    }
+
+                    self.delegate?.didLoadData()
+                case .failure(let error):
+                    self.delegate?.showError(error: error)
             }
         }
     }
     
     private func getFriends() {
-        var params = [FriendsRequestParams.fields.rawValue: FriendsRequestFieldsParams.params([.photo100, .online, .city]),
-                      FriendsRequestParams.order.rawValue: FriendsRequestOrderParams.hints.rawValue]
-        if let userId = userId {
-            params[FriendsRequestParams.userId.rawValue] = userId
-        }
-        APIManager.shader.request(path: .getFriends, params: params) { data, error in
-            guard error == nil else {
-                self.delegate?.showError(error: error!)
-                return
-            }
-            if let data = data {
-                let response = try! JSONDecoder().decode(FriendsResponseWrapper.self, from: data)
-                self.friendsResponse = response.response
-                self.delegate?.didLoadData()
+        dataFetcher.getFriends(userId: userId, fieldsParams: [.photo100, .online, .city], orderParams: .hints) {  [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .success(let response):
+                    self.friendsResponse = response.response
+                    self.friendsResponse?.userId = self.userId
+                    self.delegate?.didLoadData()
+                case .failure(let error):
+                    if let deletedError = error as? ErrorResponse {
+                        guard deletedError.errorCode != 18 else { return }
+                        self.delegate?.showError(error: error)
+                    }
+                    self.delegate?.showError(error: error)
             }
         }
     }
@@ -133,7 +139,6 @@ extension PageProfileViewModel: PageProfileViewModelType {
                                        isOnline: user.isOnline,
                                        isOnlineMobile: user.isOnlineMobile)
         }
-        
         let friendsListViewModel = FriendsList(countFriends: response.count, friendsList: friendsList)
         return friendsListViewModel
     }
@@ -145,5 +150,13 @@ extension PageProfileViewModel: PageProfileViewModelType {
     func loadProfileInfo() {
         self.getProfileInformation()
         self.getFriends()
+    }
+    
+    var isClosed: Bool {
+        return isClosePage
+    }
+    
+    var isDeleted: Bool {
+        return isDeactivated
     }
 }

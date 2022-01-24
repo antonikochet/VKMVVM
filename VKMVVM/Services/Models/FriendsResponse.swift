@@ -14,4 +14,6 @@ struct FriendsResponseWrapper: Decodable {
 struct FriendsResponse: Decodable {
     let count: Int
     let items: [UserResponse]
+    
+    var userId: String?
 }

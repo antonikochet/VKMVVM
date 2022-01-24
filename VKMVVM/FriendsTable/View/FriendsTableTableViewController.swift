@@ -9,11 +9,18 @@ import UIKit
 
 class FriendsTableTableViewController: UITableViewController {
 
+    private let refresh: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshFriends), for: .valueChanged)
+        return refreshControl
+    }()
+    
     var viewModel: FriendsTableViewModelType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(FriendTableViewCell.self, forCellReuseIdentifier: FriendTableViewCell.identifier)
+        tableView.refreshControl = refresh
     }
 
     // MARK: - Table view data source
@@ -44,10 +51,19 @@ class FriendsTableTableViewController: UITableViewController {
             navigationController?.pushViewController(friendPageVC, animated: true)
         }
     }
+    
+    // MARK: - func for refrash control table view
+    @objc private func refreshFriends() {
+        viewModel?.refreshFriends()
+    }
 }
 
 extension FriendsTableTableViewController: FriendsTableViewModelDelegate {
     func didLoadData() {
         tableView.reloadData()
+    }
+    
+    func showError(_ error: Error) {
+        print(error)
     }
 }
