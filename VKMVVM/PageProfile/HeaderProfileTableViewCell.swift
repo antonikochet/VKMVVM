@@ -14,13 +14,20 @@ protocol HeaderProfileCellViewModelType {
     var onlineStatus: String { get }
 }
 
+protocol HeaderProfileCellDelegate: AnyObject {
+    func showProfilePhotosGallery()
+}
+
 class HeaderProfileTableViewCell: UITableViewCell {
 
     static let identifier = "HeaderProfileTableViewCell"
     
+    weak var delegate: HeaderProfileCellDelegate?
+    
     private let iconImageView: WebImageView = {
         let imageView = WebImageView()
         imageView.backgroundColor = UIColor(white: 0.8, alpha: 1)
+        imageView.isUserInteractionEnabled = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -60,6 +67,9 @@ class HeaderProfileTableViewCell: UITableViewCell {
         contentView.addSubview(statusLabel)
         contentView.addSubview(onlineLabel)
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(showGalleryMainPhoto))
+        iconImageView.addGestureRecognizer(gesture)
+        
         let iconHeight = StaticSizesPageProfileCell.heigthHeaderProfileCell - 8 - 8
         iconImageView.layer.cornerRadius = iconHeight / 2
         iconImageView.clipsToBounds = true
@@ -95,4 +105,7 @@ class HeaderProfileTableViewCell: UITableViewCell {
         onlineLabel.text = viewModel.onlineStatus
     }
 
+    @objc private func showGalleryMainPhoto() {
+        delegate?.showProfilePhotosGallery()
+    }
 }

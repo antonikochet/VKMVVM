@@ -14,6 +14,7 @@ protocol NewsFeedViewModelType {
     func updateData()
     func getNextBatchNews()
     func revealPost(_ id: Int)
+    func getPhotosFromItems(by index: Int) -> [Photo]
 }
 
 protocol NewsFeedViewModelDelegate: AnyObject {
@@ -180,5 +181,12 @@ extension NewsFeedViewModel: NewsFeedViewModelType {
     
     func getNextBatchNews() {
         getNewsFeed(newFromInProcess)
+    }
+    
+    func getPhotosFromItems(by index: Int) -> [Photo] {
+        guard let cell = cells[index] as? NewsFeedModel,
+              let item = responseData?.items.first(where: { return $0.postId == cell.postId }),
+              let photos = item.attachments?.compactMap({ return $0.photo }) else { return [] }
+        return photos
     }
 }

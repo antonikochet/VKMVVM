@@ -9,6 +9,9 @@ import UIKit
 
 protocol DetailPhotoViewModelType {
     var photoUrlString: String? { get }
+    var likes: String { get }
+    var comments: String { get }
+    var reposts: String { get }
 }
 
 class DetailPhotoViewController: UIViewController {

@@ -9,4 +9,7 @@ import Foundation
 
 struct DetailGalleryPhotosModel: DetailPhotoViewModelType {
     var photoUrlString: String?
+    var likes: String
+    var comments: String
+    var reposts: String
 }

@@ -111,10 +111,10 @@ extension NewsFeedViewController: NewsFeedCellDelegate {
     }
     
     func showDetailGalleryPhotos(for cell: NewsFeedViewCell) {
-        guard let indexPath = tableView.indexPath(for: cell),
-              let cellViewModel = viewModel.getItem(by: indexPath.row) as? NewsFeedModel else { return }
-
-        let galleryModelView = DetailGalleryPhotosModelView(cellViewModel.contentPost.photos)
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photos = viewModel.getPhotosFromItems(by: indexPath.row)
+        
+        let galleryModelView = DetailGalleryPhotosModelView(photos)
         let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: 0) //TODO: добавить опредление индекса нажатой фотографии
 
         navigationController?.pushViewController(galleryVC, animated: true)

@@ -31,4 +31,10 @@ class Configurator {
         friendsViewModel.delegate = friendsVC
         return friendsVC
     }
+    
+    static func configuratorGalleryPhotos(photos: [Photo], beginIndexPhoto: Int) -> DetailGalleryPhotosViewController {
+        let galleryModelView = DetailGalleryPhotosModelView(photos)
+        let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: beginIndexPhoto)
+        return galleryVC
+    }
 }

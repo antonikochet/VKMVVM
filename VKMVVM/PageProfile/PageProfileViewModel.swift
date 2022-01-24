@@ -9,6 +9,7 @@ import Foundation
 
 protocol PageProfileViewModelType {
     func loadProfileInfo()
+    func loadPhotosProfileInfo()
     func getHeaderProfile() -> HeaderProfileCellViewModelType?
     func getBriefUserInfo() -> BriefUserInfoViewModelType?
     func getFriendsList() -> FriendsListViewModelType?
@@ -19,6 +20,7 @@ protocol PageProfileViewModelType {
 
 protocol PageProfileViewModelDelegate: AnyObject {
     func didLoadData()
+    func didPhotosProfile(photos: [Photo])
     func showError(error: Error)
 }
 
@@ -77,6 +79,19 @@ class PageProfileViewModel {
                         guard deletedError.errorCode != 18 else { return }
                         self.delegate?.showError(error: error)
                     }
+                    self.delegate?.showError(error: error)
+            }
+        }
+    }
+    
+    private func getMainPhotosProfile() {
+        dataFetcher.getPhotos(ownerId: userId, photoIds: nil, albumId: .profile, extended: true) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .success(let response):
+                    let photos = Array(response.response.items.reversed())
+                    self.delegate?.didPhotosProfile(photos: photos)
+                case .failure(let error):
                     self.delegate?.showError(error: error)
             }
         }
@@ -150,6 +165,10 @@ extension PageProfileViewModel: PageProfileViewModelType {
     func loadProfileInfo() {
         self.getProfileInformation()
         self.getFriends()
+    }
+    
+    func loadPhotosProfileInfo() {
+        getMainPhotosProfile()
     }
     
     var isClosed: Bool {

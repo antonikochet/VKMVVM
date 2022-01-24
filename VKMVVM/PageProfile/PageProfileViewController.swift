@@ -46,6 +46,12 @@ extension PageProfileViewController: PageProfileViewModelDelegate {
         }
     }
 
+    func didPhotosProfile(photos: [Photo]) {
+        DispatchQueue.main.async {
+            let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: 0)
+            self.navigationController?.pushViewController(galleryVC, animated: true)
+        }
+    }
     func showError(error: Error) {
         print(error)
     }
@@ -67,6 +73,7 @@ extension PageProfileViewController: UITableViewDataSource {
                 let custemCell = tableView.dequeueReusableCell(withIdentifier: HeaderProfileTableViewCell.identifier, for: indexPath) as! HeaderProfileTableViewCell
                 if let viewModel = viewModel?.getHeaderProfile() {
                     custemCell.set(viewModel: viewModel)
+                    custemCell.delegate = self
                 }
                 return custemCell
             case IndexPath(row: 1, section: 0):
@@ -130,5 +137,11 @@ extension PageProfileViewController: FriendsViewCellDelegate {
     func showFriend(by id: Int) {
         let pageFriendsVC = Configurator.configuratorPageProfile(userId: String(id))
         navigationController?.pushViewController(pageFriendsVC, animated: true)
+    }
+}
+
+extension PageProfileViewController: HeaderProfileCellDelegate {
+    func showProfilePhotosGallery() {
+        viewModel?.loadPhotosProfileInfo()
     }
 }

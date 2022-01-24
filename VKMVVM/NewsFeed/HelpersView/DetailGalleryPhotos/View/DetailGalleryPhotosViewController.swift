@@ -58,8 +58,8 @@ class DetailGalleryPhotosViewController: UIPageViewController {
         return element
     }()
     
-    private let views: ElementBottomView = {
-        let element = ElementBottomView(nameImage: .view, centerPositionSubviewsFlag: true)
+    private let reposts: ElementBottomView = {
+        let element = ElementBottomView(nameImage: .shares, centerPositionSubviewsFlag: true)
         return element
     }()
     
@@ -122,7 +122,7 @@ class DetailGalleryPhotosViewController: UIPageViewController {
         view.addSubview(bottomStackView)
         bottomStackView.addArrangedSubview(likes)
         bottomStackView.addArrangedSubview(comments)
-        bottomStackView.addArrangedSubview(views)
+        bottomStackView.addArrangedSubview(reposts)
         
         NSLayoutConstraint.activate([
             topView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -149,9 +149,10 @@ class DetailGalleryPhotosViewController: UIPageViewController {
     
     private func set(at index: Int) {
         titleTopViewLabel.text = viewModel.getCurrectTitle(at: index)
-        likes.set(text: "")
-        views.set(text: "")
-        comments.set(text: "")
+        let photo = viewModel.getPhoto(at: index)
+        likes.set(text: photo?.likes)
+        reposts.set(text: photo?.reposts)
+        comments.set(text: photo?.comments)
     }
     
     //MARK: - helper methods

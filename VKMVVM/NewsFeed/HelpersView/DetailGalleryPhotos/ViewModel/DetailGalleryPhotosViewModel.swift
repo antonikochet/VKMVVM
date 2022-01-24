@@ -14,9 +14,9 @@ protocol DetailGalleryPhotosViewModelType {
 }
 
 class DetailGalleryPhotosModelView {
-    private var photos: [NewsFeedCellPhotoAttachementViewModelType]
+    private var photos: [Photo]
     
-    init(_ photos: [NewsFeedCellPhotoAttachementViewModelType]) {
+    init(_ photos: [Photo]) {
         self.photos = photos
     }
 }
@@ -25,7 +25,10 @@ extension DetailGalleryPhotosModelView: DetailGalleryPhotosViewModelType {
     func getPhoto(at index: Int) -> DetailPhotoViewModelType? {
         guard index >= 0 && index < photos.count else { return nil }
         let photo = photos[index]
-        return DetailGalleryPhotosModel(photoUrlString: photo.photoURLString)
+        return DetailGalleryPhotosModel(photoUrlString: photo.srcBIG,
+                                        likes: photo.likes?.count.description ?? "",
+                                        comments: photo.comments?.count.description ?? "",
+                                        reposts: photo.views?.count.description ?? "")
     }
     
     var count: Int {
