@@ -43,6 +43,10 @@ class FriendsTableViewModel {
                 case .success(let response):
                     self.friendsResponse = response.response
                 case .failure(let error):
+                    if let deletedError = error as? ErrorResponse {
+                        guard deletedError.errorCode != 30 else { return }
+                        self.delegate?.showError(error)
+                    }
                     self.delegate?.showError(error)
             }
         }

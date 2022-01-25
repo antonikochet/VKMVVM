@@ -5,7 +5,7 @@
 //  Created by Антон Кочетков on 21.01.2022.
 //
 
-import Foundation
+import UIKit
 
 class Configurator {
     static func configuratorNewsFeed() -> NewsFeedViewController {
@@ -44,5 +44,40 @@ class Configurator {
         followersVC.viewModel = followersViewModel
         followersViewModel.delegate = followersVC
         return followersVC
+    }
+    
+    static func conficuratorMainTabBar(viewControllers: [UIViewController]) -> UITabBarController {
+        let tabBarVC = UITabBarController()
+        tabBarVC.setViewControllers(viewControllers, animated: true)
+        tabBarVC.tabBar.tintColor = UIColor(named: "ColorVK")!
+        tabBarVC.tabBar.backgroundColor = UIColor(named: "NewsFeedView")!
+        return tabBarVC
+    }
+    
+    static func configuratorRootViewController() -> UIViewController {
+        let pageProfileVC = Configurator.configuratorPageProfile(userId: nil)
+        let newsFeedVC = Configurator.configuratorNewsFeed()
+        let navBarNewsFeedVC = UINavigationController(rootViewController: newsFeedVC)
+        let navBarPageProfileVC = UINavigationController(rootViewController: pageProfileVC)
+        
+        navBarNewsFeedVC.configuratorTabBarItem(title: "Новости", image: .newsFeed, tag: 0)
+        navBarPageProfileVC.configuratorTabBarItem(title: "Страница", image: .profile, tag: 1)
+        
+        let tabBarVC = Configurator.conficuratorMainTabBar(viewControllers: [navBarNewsFeedVC, navBarPageProfileVC])
+        return tabBarVC
+    }
+}
+
+extension UIViewController {
+    enum NameImageTabBarItem: String {
+        case profile = "person.crop.circle"
+        case newsFeed = "newspaper.fill"
+    }
+    
+    func configuratorTabBarItem(title: String, image: NameImageTabBarItem, tag: Int) {
+        tabBarItem.title = title
+        tabBarItem.image = UIImage(systemName: image.rawValue)?.withRenderingMode(.alwaysTemplate)
+        tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 16)], for: .normal)
+        tabBarItem.tag = tag
     }
 }

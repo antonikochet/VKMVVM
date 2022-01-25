@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         authService.delegate = self
         window?.rootViewController = authVC
+        authVC.view.isHidden = true
         
         window?.makeKeyAndVisible()
         authService.wakeUpSession()
@@ -65,18 +66,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate: AuthServiceDelegate {
     func authServiceShouldShow(viewController: UIViewController) {
+        window?.rootViewController?.view.isHidden = false
         window?.rootViewController?.present(viewController, animated: true, completion: nil)
     }
     
     func authServiceSignIn() {
-        let pageProfileVC = Configurator.configuratorPageProfile(userId: nil)
-//        let newsFeedVC = Configurator.configuratorNewsFeed()
-        window?.rootViewController = UINavigationController(rootViewController: pageProfileVC)
+        window?.rootViewController = Configurator.configuratorRootViewController()
     }
     
     func authServiceSignInDidFail() {
         
     }
     
-    
+    func forceLogout() {
+        window?.rootViewController = AuthViewController()
+    }
 }

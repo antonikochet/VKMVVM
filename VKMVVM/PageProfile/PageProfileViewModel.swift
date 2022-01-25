@@ -17,6 +17,7 @@ protocol PageProfileViewModelType {
     var isClosed: Bool { get }
     var isDeleted: Bool { get }
     var nickName: String { get }
+    var isProfileSpecificUser: Bool { get }
 }
 
 protocol PageProfileViewModelDelegate: AnyObject {
@@ -77,7 +78,7 @@ class PageProfileViewModel {
                     self.delegate?.didLoadData()
                 case .failure(let error):
                     if let deletedError = error as? ErrorResponse {
-                        guard deletedError.errorCode != 18 else { return }
+                        guard deletedError.errorCode != 18, deletedError.errorCode != 30 else { return }
                         self.delegate?.showError(error: error)
                     }
                     self.delegate?.showError(error: error)
@@ -182,5 +183,9 @@ extension PageProfileViewModel: PageProfileViewModelType {
     
     var nickName: String {
         return response?.screenName ?? ""
+    }
+    
+    var isProfileSpecificUser: Bool {
+        return (userId?.isEmpty ?? true)
     }
 }

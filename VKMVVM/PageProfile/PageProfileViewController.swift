@@ -37,6 +37,20 @@ class PageProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel?.loadProfileInfo()
+        setupRightBarButton()
+    }
+    
+    private func setupRightBarButton() {
+        if viewModel?.isProfileSpecificUser ?? false {
+            let rightBarButtomItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(exitProfile))
+            navigationItem.rightBarButtonItem = rightBarButtomItem
+        }
+    }
+    
+    @objc private func exitProfile() {
+        showYesOrNoAlert(title: "Выход из аккаунта", message: "Вы уверены, что хотите выйти из своего аккаунта?") {
+            AuthService.shared.forceLogout()
+        }
     }
 }
 

@@ -50,5 +50,7 @@ extension AuthViewController: AuthServiceDelegate {
         print(#function)
     }
     
-    
+    func forceLogout() {
+        print(#function)
+    }
 }
