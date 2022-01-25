@@ -12,6 +12,11 @@ enum UserRequestParams: String {
     case fields
 }
 
+enum UsersGetFollowersRequestParams: String {
+    case userId = "user_id"
+    case fields
+}
+
 enum UserRequestFieldsParams: String, CaseIterable {
     case birthdayData = "bdate"
     case screenName = "screen_name"

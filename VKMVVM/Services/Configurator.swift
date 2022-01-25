@@ -37,4 +37,12 @@ class Configurator {
         let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: beginIndexPhoto)
         return galleryVC
     }
+    
+    static func conficuratorFollowerTable(userId: String?) -> FollowerTableViewController {
+        let followersViewModel = FollowerTableViewModel(userId: userId)
+        let followersVC = FollowerTableViewController()
+        followersVC.viewModel = followersViewModel
+        followersViewModel.delegate = followersVC
+        return followersVC
+    }
 }

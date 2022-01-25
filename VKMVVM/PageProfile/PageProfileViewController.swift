@@ -26,6 +26,7 @@ class PageProfileViewController: UIViewController {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
+        navigationItem.backButtonTitle = ""
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -43,6 +44,7 @@ extension PageProfileViewController: PageProfileViewModelDelegate {
     func didLoadData() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
+            self.navigationItem.title = self.viewModel?.nickName
         }
     }
 
@@ -80,6 +82,7 @@ extension PageProfileViewController: UITableViewDataSource {
                 let custemCell = tableView.dequeueReusableCell(withIdentifier: BriefUserInfoViewCell.identifier, for: indexPath) as! BriefUserInfoViewCell
                 if let viewModel = viewModel?.getBriefUserInfo() {
                     custemCell.set(viewModel: viewModel)
+                    custemCell.delegate = self
                 }
                 return custemCell
             case IndexPath(row: 2, section: 0):
@@ -143,5 +146,13 @@ extension PageProfileViewController: FriendsViewCellDelegate {
 extension PageProfileViewController: HeaderProfileCellDelegate {
     func showProfilePhotosGallery() {
         viewModel?.loadPhotosProfileInfo()
+    }
+}
+
+extension PageProfileViewController: BriefUserInfoViewCellDelegate {
+    func showFollowersTable() {
+        let userId = viewModel?.getFriendsResponse()?.userId 
+        let followersTableVC = Configurator.conficuratorFollowerTable(userId: userId)
+        navigationController?.pushViewController(followersTableVC, animated: true)
     }
 }

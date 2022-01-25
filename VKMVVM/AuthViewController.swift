@@ -20,7 +20,7 @@ class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemOrange
+        view.backgroundColor = .white
         view.addSubview(authButton)
         authButton.addTarget(self, action: #selector(singIn), for: .touchUpInside)
         NSLayoutConstraint.activate([

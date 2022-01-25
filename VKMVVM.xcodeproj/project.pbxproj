@@ -35,6 +35,10 @@
 		A57F2DDA279F117C00595864 /* PhotosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DD9279F117C00595864 /* PhotosResponse.swift */; };
 		A57F2DDC279F134B00595864 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DDB279F134B00595864 /* Photo.swift */; };
 		A57F2DDE279F13C800595864 /* PhotosRequestParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DDD279F13C800595864 /* PhotosRequestParams.swift */; };
+		A57F2DE2279F630700595864 /* FollowerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DE1279F630700595864 /* FollowerTableViewController.swift */; };
+		A57F2DE4279F636500595864 /* FollowerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DE3279F636500595864 /* FollowerTableViewCell.swift */; };
+		A57F2DE7279F668200595864 /* FollowerTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DE6279F668200595864 /* FollowerTableModel.swift */; };
+		A57F2DEA279F66C700595864 /* FollowerTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F2DE9279F66C700595864 /* FollowerTableViewModel.swift */; };
 		A58953502786032A00162F40 /* RowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589534F2786032A00162F40 /* RowLayout.swift */; };
 		A58A1A77279A15950041B432 /* Configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58A1A76279A15950041B432 /* Configurator.swift */; };
 		A58A1A79279A254C0041B432 /* FriendCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58A1A78279A254C0041B432 /* FriendCollectionViewCell.swift */; };
@@ -111,6 +115,10 @@
 		A57F2DD9279F117C00595864 /* PhotosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosResponse.swift; sourceTree = "<group>"; };
 		A57F2DDB279F134B00595864 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		A57F2DDD279F13C800595864 /* PhotosRequestParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosRequestParams.swift; sourceTree = "<group>"; };
+		A57F2DE1279F630700595864 /* FollowerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerTableViewController.swift; sourceTree = "<group>"; };
+		A57F2DE3279F636500595864 /* FollowerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerTableViewCell.swift; sourceTree = "<group>"; };
+		A57F2DE6279F668200595864 /* FollowerTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerTableModel.swift; sourceTree = "<group>"; };
+		A57F2DE9279F66C700595864 /* FollowerTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerTableViewModel.swift; sourceTree = "<group>"; };
 		A589534F2786032A00162F40 /* RowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowLayout.swift; sourceTree = "<group>"; };
 		A58A1A76279A15950041B432 /* Configurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurator.swift; sourceTree = "<group>"; };
 		A58A1A78279A254C0041B432 /* FriendCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FriendCollectionViewCell.swift; path = FriendsCollection/View/FriendCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -257,6 +265,7 @@
 		A56C7C852768FA0600374BFC /* VKMVVM */ = {
 			isa = PBXGroup;
 			children = (
+				A57F2DDF279F62A800595864 /* FollowerTable */,
 				A5D3F3EB279B000F004B96B3 /* FriendsTable */,
 				A59D3F2527739222007D1AA4 /* Helpers */,
 				A58AB97927931A8C004A18E1 /* PageProfile */,
@@ -336,6 +345,41 @@
 				A57F2DDB279F134B00595864 /* Photo.swift */,
 			);
 			path = Photos;
+			sourceTree = "<group>";
+		};
+		A57F2DDF279F62A800595864 /* FollowerTable */ = {
+			isa = PBXGroup;
+			children = (
+				A57F2DE8279F66AC00595864 /* ViewModel */,
+				A57F2DE5279F666600595864 /* Model */,
+				A57F2DE0279F62DD00595864 /* View */,
+			);
+			path = FollowerTable;
+			sourceTree = "<group>";
+		};
+		A57F2DE0279F62DD00595864 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A57F2DE1279F630700595864 /* FollowerTableViewController.swift */,
+				A57F2DE3279F636500595864 /* FollowerTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A57F2DE5279F666600595864 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A57F2DE6279F668200595864 /* FollowerTableModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A57F2DE8279F66AC00595864 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A57F2DE9279F66C700595864 /* FollowerTableViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		A58AB97927931A8C004A18E1 /* PageProfile */ = {
@@ -638,6 +682,7 @@
 				A58AB98527943C0D004A18E1 /* PageProfileModel.swift in Sources */,
 				A59BF093276A301F0004F343 /* AuthViewController.swift in Sources */,
 				A5E95AF4277CF70600454BEB /* WebImageView.swift in Sources */,
+				A57F2DE4279F636500595864 /* FollowerTableViewCell.swift in Sources */,
 				A5387A9B2783BD1800FF6930 /* GalleryCollectionView.swift in Sources */,
 				A57B33472794D6F100F7F3FE /* BriefUserInfoViewCell.swift in Sources */,
 				A58A1A77279A15950041B432 /* Configurator.swift in Sources */,
@@ -660,9 +705,12 @@
 				A5D4AB90278F01630045E333 /* DetailGalleryPhotosModel.swift in Sources */,
 				A57B33452794CFC400F7F3FE /* StaticSizesPageProfileCell.swift in Sources */,
 				A5C73176279C9B830029E080 /* NetworkDataFetсher.swift in Sources */,
+				A57F2DE2279F630700595864 /* FollowerTableViewController.swift in Sources */,
 				A5D3F3F5279B0BBB004B96B3 /* FriendTableViewCell.swift in Sources */,
+				A57F2DE7279F668200595864 /* FollowerTableModel.swift in Sources */,
 				A58A1A79279A254C0041B432 /* FriendCollectionViewCell.swift in Sources */,
 				A57B334B2794EA0500F7F3FE /* CalculatorSizes.swift in Sources */,
+				A57F2DEA279F66C700595864 /* FollowerTableViewModel.swift in Sources */,
 				A590839F2770DB310016F641 /* NewsFeedResponse.swift in Sources */,
 				A57B333B2794510800F7F3FE /* UserResponse.swift in Sources */,
 			);

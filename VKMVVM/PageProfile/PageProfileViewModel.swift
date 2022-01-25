@@ -16,6 +16,7 @@ protocol PageProfileViewModelType {
     func getFriendsResponse() -> FriendsResponse?
     var isClosed: Bool { get }
     var isDeleted: Bool { get }
+    var nickName: String { get }
 }
 
 protocol PageProfileViewModelDelegate: AnyObject {
@@ -177,5 +178,9 @@ extension PageProfileViewModel: PageProfileViewModelType {
     
     var isDeleted: Bool {
         return isDeactivated
+    }
+    
+    var nickName: String {
+        return response?.screenName ?? ""
     }
 }

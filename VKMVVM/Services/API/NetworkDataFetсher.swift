@@ -15,6 +15,7 @@ protocol DataFetcher {
     func getProfileInfo(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<UserResponseWrapper>)
     func getFriends(userId: String?, fieldsParams: [FriendsRequestFieldsParams], orderParams: FriendsRequestOrderParams?, completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
     func getPhotos(ownerId: String?, photoIds: [String]?, albumId: AlbumIdRequestParams, extended: Bool, completiom: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
+    func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
 }
 
 struct NetworkDataFetcher: DataFetcher {
@@ -58,6 +59,18 @@ struct NetworkDataFetcher: DataFetcher {
         makeRequest(path: .getPhotos, params: params, response: PhotosResponseWrapper.self, completion: completiom)
     }
     
+    func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>) {
+        var params: [String: String] = [:]
+        if let userId = userId {
+            params[UsersGetFollowersRequestParams.userId.rawValue] = userId
+        }
+        if !fieldsParams.isEmpty {
+            params[UsersGetFollowersRequestParams.fields.rawValue] = UserRequestFieldsParams.params(fieldsParams)
+        }
+        makeRequest(path: .getFollowers, params: params, response: FriendsResponseWrapper.self, completion: completion)
+    }
+    
+    //MARK: - private method for universal make request for all methods API
     private func makeRequest<T: Decodable>(path: APIMethods, params: Parametrs, response: T.Type, completion: @escaping DataFetcherCompletion<T>) {
         APIManager.shader.request(path: path, params: params) { data, error in
             guard error == nil else {

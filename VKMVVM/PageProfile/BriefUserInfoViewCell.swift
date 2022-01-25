@@ -14,9 +14,15 @@ protocol BriefUserInfoViewModelType {
     var followes: String? { get }
 }
 
+protocol BriefUserInfoViewCellDelegate: AnyObject {
+    func showFollowersTable()
+}
+
 class BriefUserInfoViewCell: UITableViewCell {
 
     static let identifier = "BriefUserInfoViewCell"
+    
+    weak var delegate: BriefUserInfoViewCellDelegate?
     
     private let stack: UIStackView = {
         let stack = UIStackView()
@@ -49,6 +55,8 @@ class BriefUserInfoViewCell: UITableViewCell {
         stack.addArrangedSubview(followesView)
         stack.addArrangedSubview(detailModelViewButton)
         
+        followesView.addTarget(self, action: #selector(touchFollowersButton), for: .touchUpInside)
+        
         let padding = StaticSizesPageProfileCell.paddingBriefUserStack
         NSLayoutConstraint.activate([
             stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding.top),
@@ -76,5 +84,9 @@ class BriefUserInfoViewCell: UITableViewCell {
         } else {
             view.isHidden = true
         }
+    }
+    
+    @objc private func touchFollowersButton() {
+        delegate?.showFollowersTable()
     }
 }
