@@ -17,6 +17,7 @@ protocol DataFetcher {
     func getPhotos(ownerId: String?, photoIds: [String]?, albumId: AlbumIdRequestParams, extended: Bool, completiom: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
     func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
     func getAllPhotos(ownerId: String?, extended: Bool, count: Int?, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
+    func getAlbums(ownerId: String?, photoSizes: Bool, needSystem: Bool, completion: @escaping DataFetcherCompletion<AlbumResponseWrapper>)
 }
 
 struct NetworkDataFetcher: DataFetcher {
@@ -81,6 +82,17 @@ struct NetworkDataFetcher: DataFetcher {
         }
         params[GetAllPhotosRequestParams.extended.rawValue] = String(extended ? 1 : 0)
         makeRequest(path: .getAllPhotos, params: params, response: PhotosResponseWrapper.self, completion: completion)
+    }
+    
+    func getAlbums(ownerId: String?, photoSizes: Bool, needSystem: Bool, completion: @escaping DataFetcherCompletion<AlbumResponseWrapper>) {
+        var params: Parametrs = [:]
+        if let ownerId = ownerId {
+            params[AlbumsRequestParams.ownerId.rawValue] = ownerId
+        }
+        params[AlbumsRequestParams.photoSizes.rawValue] = String(photoSizes ? 1 : 0)
+        params[AlbumsRequestParams.needSystem.rawValue] = String(needSystem ? 1 : 0)
+        params[AlbumsRequestParams.needCovers.rawValue] = String(photoSizes ? 1 : 0)
+        makeRequest(path: .getAlbums, params: params, response: AlbumResponseWrapper.self, completion: completion)
     }
     
     //MARK: - private method for universal make request for all methods API

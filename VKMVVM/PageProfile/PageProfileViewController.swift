@@ -157,6 +157,10 @@ extension PageProfileViewController: UITableViewDelegate {
                 let response = viewModel?.getFriendsResponse()
                 let frindsTableVC = Configurator.configuratorFriendsTable(friends: response)
                 navigationController?.pushViewController(frindsTableVC, animated: true)
+            case IndexPath(row: 3, section: 0):
+                let userId = viewModel?.getFriendsResponse()?.userId
+                let photosVC = Configurator.configuratorPhotosGalleryProfile(userId: userId)
+                navigationController?.pushViewController(photosVC, animated: true)
             default:
                 return
         }

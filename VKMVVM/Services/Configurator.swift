@@ -66,6 +66,14 @@ class Configurator {
         let tabBarVC = Configurator.conficuratorMainTabBar(viewControllers: [navBarNewsFeedVC, navBarPageProfileVC])
         return tabBarVC
     }
+    
+    static func configuratorPhotosGalleryProfile(userId: String?) -> PhotosGalleryProfileTableViewController {
+        let viewModel = PhotosGalleryProfileViewModel(userId: userId)
+        let vc = PhotosGalleryProfileTableViewController()
+        viewModel.delegate = vc
+        vc.viewModel = viewModel
+        return vc
+    }
 }
 
 extension UIViewController {
