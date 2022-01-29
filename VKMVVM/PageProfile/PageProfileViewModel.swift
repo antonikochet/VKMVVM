@@ -14,10 +14,12 @@ protocol PageProfileViewModelType {
     func getBriefUserInfo() -> BriefUserInfoViewModelType?
     func getFriendsList() -> FriendsListViewModelType?
     func getFriendsResponse() -> FriendsResponse?
+    func getGalleryPhotos() -> PhotoListViewModelType?
     var isClosed: Bool { get }
     var isDeleted: Bool { get }
     var nickName: String { get }
     var isProfileSpecificUser: Bool { get }
+    var isEmptyPhotos: Bool { get }
 }
 
 protocol PageProfileViewModelDelegate: AnyObject {
@@ -31,7 +33,9 @@ class PageProfileViewModel {
     
     private var response: UserResponse?
     private var friendsResponse: FriendsResponse?
+    private var photosUserResponse: PhotosResponse?
     private var dataFetcher: DataFetcher
+    
     private var userId: String?
     private var isClosePage: Bool = true
     private var isDeactivated: Bool = false
@@ -93,6 +97,19 @@ class PageProfileViewModel {
                 case .success(let response):
                     let photos = Array(response.response.items.reversed())
                     self.delegate?.didPhotosProfile(photos: photos)
+                case .failure(let error):
+                    self.delegate?.showError(error: error)
+            }
+        }
+    }
+    
+    private func getFullPhotosUser() {
+        dataFetcher.getAllPhotos(ownerId: userId, extended: true, count: nil) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .success(let response):
+                    self.photosUserResponse = response.response
+                    self.delegate?.didLoadData()
                 case .failure(let error):
                     self.delegate?.showError(error: error)
             }
@@ -164,9 +181,24 @@ extension PageProfileViewModel: PageProfileViewModelType {
         return friendsResponse
     }
     
+    func getGalleryPhotos() -> PhotoListViewModelType? {
+        guard photosUserResponse?.count != 0 else { return nil }
+        let photos = photosUserResponse?.items.map { photo in
+            return DetailPhotoModel(photoUrlString: photo.srcBIG,
+                                    likes: photo.likes?.count.description ?? "",
+                                    comments: photo.comments?.count.description ?? "",
+                                    reposts: photo.reposts?.count.description ?? "")} ?? []
+        
+        let photoList = PhotoList(countPhoto: photosUserResponse?.count.description ?? "",
+                                  photoList: photos)
+        
+        return photoList
+    }
+    
     func loadProfileInfo() {
         self.getProfileInformation()
         self.getFriends()
+        self.getFullPhotosUser()
     }
     
     func loadPhotosProfileInfo() {
@@ -187,5 +219,9 @@ extension PageProfileViewModel: PageProfileViewModelType {
     
     var isProfileSpecificUser: Bool {
         return (userId?.isEmpty ?? true)
+    }
+    
+    var isEmptyPhotos: Bool {
+        return (photosUserResponse?.count ?? 0) == 0 
     }
 }

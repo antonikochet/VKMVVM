@@ -25,10 +25,10 @@ extension DetailGalleryPhotosModelView: DetailGalleryPhotosViewModelType {
     func getPhoto(at index: Int) -> DetailPhotoViewModelType? {
         guard index >= 0 && index < photos.count else { return nil }
         let photo = photos[index]
-        return DetailGalleryPhotosModel(photoUrlString: photo.srcBIG,
+        return DetailPhotoModel(photoUrlString: photo.srcBIG,
                                         likes: photo.likes?.count.description ?? "",
                                         comments: photo.comments?.count.description ?? "",
-                                        reposts: photo.views?.count.description ?? "")
+                                        reposts: photo.reposts?.count.description ?? "")
     }
     
     var count: Int {

@@ -35,3 +35,8 @@ struct FriendCellViewModel: FriendCellViewModelType {
     var isOnline: Bool
     var isOnlineMobile: Bool
 }
+
+struct PhotoList: PhotoListViewModelType {
+    var countPhoto: String
+    var photoList: [DetailPhotoViewModelType]
+}

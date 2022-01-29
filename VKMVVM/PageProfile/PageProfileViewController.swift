@@ -17,6 +17,7 @@ class PageProfileViewController: UIViewController {
         tableView.register(BriefUserInfoViewCell.self, forCellReuseIdentifier: BriefUserInfoViewCell.identifier)
         tableView.register(FriendsViewCell.self, forCellReuseIdentifier: FriendsViewCell.identifier)
         tableView.register(ClosedTableViewCell.self, forCellReuseIdentifier: ClosedTableViewCell.identifier)
+        tableView.register(PhotosGalleryProfileViewCell.self, forCellReuseIdentifier: PhotosGalleryProfileViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -77,7 +78,11 @@ extension PageProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             case 0:
-                return 3
+                if viewModel?.isClosed ?? false {
+                    return 3
+                } else {
+                    return 4
+                }
             default:
                 return 0
         }
@@ -112,6 +117,12 @@ extension PageProfileViewController: UITableViewDataSource {
                     }
                     return custemCell
                 }
+            case IndexPath(row: 3, section: 0):
+                let custemCell = tableView.dequeueReusableCell(withIdentifier: PhotosGalleryProfileViewCell.identifier, for: indexPath) as! PhotosGalleryProfileViewCell
+                if let viewModel = viewModel?.getGalleryPhotos() {
+                    custemCell.set(viewModel: viewModel)
+                }
+                return custemCell
             default:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                 return cell
@@ -126,13 +137,15 @@ extension PageProfileViewController: UITableViewDelegate {
                 return StaticSizesPageProfileCell.heigthHeaderProfileCell
             case IndexPath(row: 1, section: 0):
                 guard let viewModel = viewModel?.getBriefUserInfo() else { return 0 }
-                return CGFloat(CalculatorSizes.calculateSizeBriefUserInfo(viewModel: viewModel))
+                return CalculatorSizes.calculateSizeBriefUserInfo(viewModel: viewModel)
             case IndexPath(row: 2, section: 0):
                 if viewModel?.isClosed ?? false {
                     return StaticSizesPageProfileCell.heightClosedCell
                 } else {
                     return StaticSizesPageProfileCell.heightFriendsCell
                 }
+            case IndexPath(row: 3, section: 0):
+                return viewModel?.isClosed ?? true || viewModel?.isEmptyPhotos ?? true ? 0 : CalculatorSizes.calculateSizePhotosGalleryCell(widthSuperView: view.frame.width)
             default:
                 return 0
         }

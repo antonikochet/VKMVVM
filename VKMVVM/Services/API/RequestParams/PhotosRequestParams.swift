@@ -14,8 +14,30 @@ enum PhotosRequestParams: String {
     case extended
 }
 
-enum AlbumIdRequestParams: String {
+enum AlbumIdRequestParams {
     case wall
     case profile
     case saved
+    case id(String)
+    
+    var string: String {
+        switch self {
+            case .wall:
+                return "wall"
+            case .profile:
+                return "profile"
+            case .saved:
+                return "saved"
+            case .id(let string):
+                return string
+        }
+    }
+}
+
+enum GetAllPhotosRequestParams: String {
+    case ownerId = "owner_id"
+    case extended
+    case count
+    case needHidden = "need_hidden"
+    case skipHidden = "skip_hidden"
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DetailGalleryPhotosModel: DetailPhotoViewModelType {
+struct DetailPhotoModel: DetailPhotoViewModelType {
     var photoUrlString: String?
     var likes: String
     var comments: String

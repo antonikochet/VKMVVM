@@ -16,6 +16,7 @@ protocol DataFetcher {
     func getFriends(userId: String?, fieldsParams: [FriendsRequestFieldsParams], orderParams: FriendsRequestOrderParams?, completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
     func getPhotos(ownerId: String?, photoIds: [String]?, albumId: AlbumIdRequestParams, extended: Bool, completiom: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
     func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
+    func getAllPhotos(ownerId: String?, extended: Bool, count: Int?, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
 }
 
 struct NetworkDataFetcher: DataFetcher {
@@ -47,20 +48,20 @@ struct NetworkDataFetcher: DataFetcher {
     }
     
     func getPhotos(ownerId: String?, photoIds: [String]?, albumId: AlbumIdRequestParams, extended: Bool, completiom: @escaping DataFetcherCompletion<PhotosResponseWrapper>) {
-        var params: [String: String] = [:]
+        var params: Parametrs = [:]
         if let ownerId = ownerId {
             params[PhotosRequestParams.ownerId.rawValue] = ownerId
         }
         if let photoIds = photoIds {
             params[PhotosRequestParams.photoIds.rawValue] = photoIds.joined(separator: ",")
         }
-        params[PhotosRequestParams.albumId.rawValue] = albumId.rawValue
+        params[PhotosRequestParams.albumId.rawValue] = albumId.string
         params[PhotosRequestParams.extended.rawValue] = (extended ? 1 : 0).description
         makeRequest(path: .getPhotos, params: params, response: PhotosResponseWrapper.self, completion: completiom)
     }
     
     func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>) {
-        var params: [String: String] = [:]
+        var params: Parametrs = [:]
         if let userId = userId {
             params[UsersGetFollowersRequestParams.userId.rawValue] = userId
         }
@@ -68,6 +69,18 @@ struct NetworkDataFetcher: DataFetcher {
             params[UsersGetFollowersRequestParams.fields.rawValue] = UserRequestFieldsParams.params(fieldsParams)
         }
         makeRequest(path: .getFollowers, params: params, response: FriendsResponseWrapper.self, completion: completion)
+    }
+    
+    func getAllPhotos(ownerId: String?, extended: Bool, count: Int? = nil, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>) {
+        var params: Parametrs = [:]
+        if let ownerId = ownerId {
+            params[GetAllPhotosRequestParams.ownerId.rawValue] = ownerId
+        }
+        if let count = count {
+            params[GetAllPhotosRequestParams.count.rawValue] = count.description
+        }
+        params[GetAllPhotosRequestParams.extended.rawValue] = String(extended ? 1 : 0)
+        makeRequest(path: .getAllPhotos, params: params, response: PhotosResponseWrapper.self, completion: completion)
     }
     
     //MARK: - private method for universal make request for all methods API

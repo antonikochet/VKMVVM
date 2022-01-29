@@ -9,9 +9,10 @@ import Foundation
 
 struct Photo: Decodable {
     let sizes: [PhotoSize]
+    let date: Int
     let likes: CountableItem?
     let comments: CountableItem?
-    let views: CountableItem?
+    let reposts: CountableItem?
     
     var height: Int {
          return getPropperSize().height

@@ -8,7 +8,7 @@
 import UIKit
 
 struct CalculatorSizes {
-    static func calculateSizeBriefUserInfo(viewModel: BriefUserInfoViewModelType) -> Int {
+    static func calculateSizeBriefUserInfo(viewModel: BriefUserInfoViewModelType) -> CGFloat {
         var count: CGFloat = 0
         count += viewModel.city != nil && !viewModel.city!.isEmpty ? 1 : 0
         count += viewModel.education != nil && !viewModel.education!.isEmpty ? 1 : 0
@@ -18,6 +18,30 @@ struct CalculatorSizes {
         let briefInfoButton = StaticSizesPageProfileCell.heightBriefUserLabel + StaticSizesPageProfileCell.spacingBriefUserLabel
         let paddingStackView = StaticSizesPageProfileCell.paddingBriefUserStack
         let height = paddingStackView.top + count * StaticSizesPageProfileCell.heightBriefUserLabel + paddingStackView.bottom + (count - 1) * StaticSizesPageProfileCell.spacingBriefUserLabel + briefInfoButton
-        return Int(height)
+        return height
+    }
+    
+    static func calculateSizePhotosGalleryCell(widthSuperView: CGFloat) -> CGFloat {
+        let heightCell = (StaticSizesPageProfileCell.topConstantLabelInCollectionView +
+                          StaticSizesPageProfileCell.fontCellsLabel.lineHeight +
+                          StaticSizesPageProfileCell.paddingPhotoCollectionView.top +
+                          StaticSizesPageProfileCell.paddingPhotoCollectionView.bottom)
+        
+        let sizeCell = calculateSizeCellPhoto(widthSuperView: widthSuperView)
+        
+        let itemsInColomn = StaticSizesPageProfileCell.itemsInColumnPhotosCollectionView
+        let paddingSpaceColomn = StaticSizesPageProfileCell.paddingPhotoGallery.top * (itemsInColomn + 1)
+        let heightColomn = sizeCell.height * itemsInColomn + paddingSpaceColomn
+        
+        return heightCell + heightColomn
+    }
+    
+    static func calculateSizeCellPhoto(widthSuperView: CGFloat) -> CGSize {
+        let itemsPerRow = StaticSizesPageProfileCell.itemsPerRowInPhotosCollectionView
+        let paddingSpace = StaticSizesPageProfileCell.paddingPhotoGallery.left * (itemsPerRow + 1)
+        let availableWidth = widthSuperView - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        
+        return CGSize(width: widthPerItem, height: widthPerItem)
     }
 }
