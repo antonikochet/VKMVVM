@@ -104,7 +104,7 @@ class PageProfileViewModel {
     }
     
     private func getFullPhotosUser() {
-        dataFetcher.getAllPhotos(ownerId: userId, extended: true, count: nil) { [weak self] result in
+        dataFetcher.getAllPhotos(ownerId: userId, extended: true, offset: nil, count: 20, skipHidden: false) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):

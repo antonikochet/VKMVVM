@@ -1,0 +1,4 @@
+. create delegate segue at photosGalleryProfile
+. optimization request for photos and albums
+. create wrapper for nslayoutconstraint
+. editing dataFetcher with university protocol params with realization in requestParams

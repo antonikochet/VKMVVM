@@ -43,7 +43,7 @@ class AlbumsViewCell: UITableViewCell {
         albumsCollectionView.delegate = self
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: StaticSizesUniversalViews.topConstantLabelCell),
             headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: StaticSizesUniversalViews.fontLabelCell.lineHeight),

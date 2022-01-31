@@ -14,4 +14,5 @@ struct PhotosResponseWrapper: Decodable {
 struct PhotosResponse: Decodable {
     let count: Int
     let items: [Photo]
+    let more: Int?
 }

@@ -16,7 +16,7 @@ protocol DataFetcher {
     func getFriends(userId: String?, fieldsParams: [FriendsRequestFieldsParams], orderParams: FriendsRequestOrderParams?, completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
     func getPhotos(ownerId: String?, photoIds: [String]?, albumId: AlbumIdRequestParams, extended: Bool, completiom: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
     func getFollowers(userId: String?, fieldsParams: [UserRequestFieldsParams], completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
-    func getAllPhotos(ownerId: String?, extended: Bool, count: Int?, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
+    func getAllPhotos(ownerId: String?, extended: Bool, offset: Int?, count: Int?, skipHidden: Bool, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
     func getAlbums(ownerId: String?, photoSizes: Bool, needSystem: Bool, completion: @escaping DataFetcherCompletion<AlbumResponseWrapper>)
 }
 
@@ -72,15 +72,19 @@ struct NetworkDataFetcher: DataFetcher {
         makeRequest(path: .getFollowers, params: params, response: FriendsResponseWrapper.self, completion: completion)
     }
     
-    func getAllPhotos(ownerId: String?, extended: Bool, count: Int? = nil, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>) {
+    func getAllPhotos(ownerId: String?, extended: Bool, offset: Int? = nil, count: Int?, skipHidden: Bool, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>) {
         var params: Parametrs = [:]
         if let ownerId = ownerId {
             params[GetAllPhotosRequestParams.ownerId.rawValue] = ownerId
         }
+        if let offset = offset {
+            params[GetAllPhotosRequestParams.offset.rawValue] = String(offset)
+        }
         if let count = count {
-            params[GetAllPhotosRequestParams.count.rawValue] = count.description
+            params[GetAllPhotosRequestParams.count.rawValue] = String(count)
         }
         params[GetAllPhotosRequestParams.extended.rawValue] = String(extended ? 1 : 0)
+        params[GetAllPhotosRequestParams.skipHidden.rawValue] = String(skipHidden ? 1 : 0)
         makeRequest(path: .getAllPhotos, params: params, response: PhotosResponseWrapper.self, completion: completion)
     }
     

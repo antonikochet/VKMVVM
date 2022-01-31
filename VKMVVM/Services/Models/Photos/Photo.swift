@@ -10,9 +10,11 @@ import Foundation
 struct Photo: Decodable {
     let sizes: [PhotoSize]
     let date: Int
+    let albumId: Int
     let likes: CountableItem?
     let comments: CountableItem?
     let reposts: CountableItem?
+    let realOffset: Int?
     
     var height: Int {
          return getPropperSize().height
@@ -34,6 +36,12 @@ struct Photo: Decodable {
         } else {
             return PhotoSize(type: "wrong image", url: "wrong image", width: 0, height: 0)
         }
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case sizes, date, likes, comments, reposts
+        case albumId = "album_id"
+        case realOffset = "real_offset"
     }
 }
 

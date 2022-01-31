@@ -17,3 +17,8 @@ struct AlbumsCellModel: AlbumsCellViewModelType {
     var count: Int
     var albums: [AlbumCellViewModelType]
 }
+
+struct PhotosCellModel: PhotosCellViewModelType {
+    var count: Int
+    var urlPhotos: [String?]
+}

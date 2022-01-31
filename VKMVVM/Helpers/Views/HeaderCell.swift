@@ -32,7 +32,7 @@ class HeaderCell: UIView {
         label.text = title
         
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: topAnchor, constant: StaticSizesUniversalViews.topConstantLabelCell),
+            label.topAnchor.constraint(equalTo: topAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             
             countLabel.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),

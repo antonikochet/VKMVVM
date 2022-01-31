@@ -37,6 +37,7 @@ enum AlbumIdRequestParams {
 enum GetAllPhotosRequestParams: String {
     case ownerId = "owner_id"
     case extended
+    case offset
     case count
     case needHidden = "need_hidden"
     case skipHidden = "skip_hidden"

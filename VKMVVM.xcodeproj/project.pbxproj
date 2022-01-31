@@ -20,6 +20,8 @@
 		A524F2A227A571C00058F74A /* AlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2A127A571C00058F74A /* AlbumViewCell.swift */; };
 		A524F2A527A581CC0058F74A /* PhotosGalleryProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2A427A581CC0058F74A /* PhotosGalleryProfileViewModel.swift */; };
 		A524F2A827A5878D0058F74A /* PhotosGalleryProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2A727A5878D0058F74A /* PhotosGalleryProfileModel.swift */; };
+		A524F2AA27A5EC110058F74A /* PhotosViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2A927A5EC110058F74A /* PhotosViewCell.swift */; };
+		A524F2AC27A5EE3E0058F74A /* PhotoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2AB27A5EE3E0058F74A /* PhotoViewCell.swift */; };
 		A5387A9B2783BD1800FF6930 /* GalleryCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5387A9A2783BD1800FF6930 /* GalleryCollectionView.swift */; };
 		A5387A9D2783BE1C00FF6930 /* GalleryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5387A9C2783BE1C00FF6930 /* GalleryCollectionViewCell.swift */; };
 		A5387A9F2783BFDC00FF6930 /* GalleryModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5387A9E2783BFDC00FF6930 /* GalleryModelView.swift */; };
@@ -112,6 +114,8 @@
 		A524F2A127A571C00058F74A /* AlbumViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewCell.swift; sourceTree = "<group>"; };
 		A524F2A427A581CC0058F74A /* PhotosGalleryProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosGalleryProfileViewModel.swift; sourceTree = "<group>"; };
 		A524F2A727A5878D0058F74A /* PhotosGalleryProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosGalleryProfileModel.swift; sourceTree = "<group>"; };
+		A524F2A927A5EC110058F74A /* PhotosViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewCell.swift; sourceTree = "<group>"; };
+		A524F2AB27A5EE3E0058F74A /* PhotoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewCell.swift; sourceTree = "<group>"; };
 		A5387A9A2783BD1800FF6930 /* GalleryCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionView.swift; sourceTree = "<group>"; };
 		A5387A9C2783BE1C00FF6930 /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
 		A5387A9E2783BFDC00FF6930 /* GalleryModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryModelView.swift; sourceTree = "<group>"; };
@@ -257,6 +261,8 @@
 			children = (
 				A5167D7F27A5626800B19B1F /* AlbumsViewCell.swift */,
 				A524F2A127A571C00058F74A /* AlbumViewCell.swift */,
+				A524F2A927A5EC110058F74A /* PhotosViewCell.swift */,
+				A524F2AB27A5EE3E0058F74A /* PhotoViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -755,12 +761,14 @@
 				A59BF09A276A534D0004F343 /* APIManager.swift in Sources */,
 				A58AB983279331CF004A18E1 /* PageProfileViewController.swift in Sources */,
 				A5387A9D2783BE1C00FF6930 /* GalleryCollectionViewCell.swift in Sources */,
+				A524F2AA27A5EC110058F74A /* PhotosViewCell.swift in Sources */,
 				A59183E2277F2A1E005BE463 /* StaticSizesNewsFeedCell.swift in Sources */,
 				A524F2A027A56BC10058F74A /* HeaderCell.swift in Sources */,
 				A5C73179279CB0650029E080 /* ErrorResponse.swift in Sources */,
 				A5D4AB8D278EF5DB0045E333 /* DetailGalleryPhotosViewModel.swift in Sources */,
 				A59BF08E276A286C0004F343 /* NewsFeedViewModel.swift in Sources */,
 				A56C7C872768FA0600374BFC /* AppDelegate.swift in Sources */,
+				A524F2AC27A5EE3E0058F74A /* PhotoViewCell.swift in Sources */,
 				A57B333F2794884200F7F3FE /* DetailInfoButton.swift in Sources */,
 				A5737FC627711C66008B2432 /* NewsFeedViewCell.swift in Sources */,
 				A57B333D2794592A00F7F3FE /* UserRequestParams.swift in Sources */,
