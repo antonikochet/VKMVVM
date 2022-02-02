@@ -74,24 +74,27 @@ class HeaderProfileTableViewCell: UITableViewCell {
         iconImageView.layer.cornerRadius = iconHeight / 2
         iconImageView.clipsToBounds = true
         
-        NSLayoutConstraint.activate([
-            iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            iconImageView.widthAnchor.constraint(equalToConstant: iconHeight),
-            iconImageView.heightAnchor.constraint(equalToConstant: iconHeight),
+        iconImageView.anchor(top: contentView.topAnchor,
+                             leading: contentView.leadingAnchor,
+                             bottom: nil,
+                             trailing: nil,
+                             padding: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 0),
+                             size: CGSize(width: iconHeight, height: iconHeight))
         
+        onlineLabel.anchor(top: statusLabel.bottomAnchor,
+                           leading: iconImageView.trailingAnchor,
+                           bottom: nil,
+                           trailing: contentView.trailingAnchor,
+                           padding: UIEdgeInsets(top: 4, left: 16, bottom: 0, right: 8))
+        
+        NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
             nameLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: -16),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
             statusLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
             statusLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: 8),
-            statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-            onlineLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
-            onlineLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
-            onlineLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)])
-        
+            statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)])
     }
 
     required init?(coder: NSCoder) {

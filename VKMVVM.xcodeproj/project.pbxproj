@@ -83,6 +83,7 @@
 		A5D4AB90278F01630045E333 /* DetailPhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D4AB8F278F01630045E333 /* DetailPhotoModel.swift */; };
 		A5E53B42277BA632005458F6 /* FeedCellCalculatorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E53B41277BA632005458F6 /* FeedCellCalculatorContentView.swift */; };
 		A5E95AF4277CF70600454BEB /* WebImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E95AF3277CF70600454BEB /* WebImageView.swift */; };
+		A5EA901327AA8E3A00ACCA2A /* extension + UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EA901227AA8E3A00ACCA2A /* extension + UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -177,6 +178,7 @@
 		A5D4AB8F278F01630045E333 /* DetailPhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPhotoModel.swift; sourceTree = "<group>"; };
 		A5E53B41277BA632005458F6 /* FeedCellCalculatorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCellCalculatorContentView.swift; sourceTree = "<group>"; };
 		A5E95AF3277CF70600454BEB /* WebImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageView.swift; sourceTree = "<group>"; };
+		A5EA901227AA8E3A00ACCA2A /* extension + UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extension + UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -600,6 +602,7 @@
 				A524F29E27A56B820058F74A /* Views */,
 				A5C7931C277392B90057922A /* extension + String.swift */,
 				A56A6B3327A0A16F00B485E1 /* extension + AlertViewController.swift */,
+				A5EA901227AA8E3A00ACCA2A /* extension + UIView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -766,6 +769,7 @@
 				A59BF08E276A286C0004F343 /* NewsFeedViewModel.swift in Sources */,
 				A56C7C872768FA0600374BFC /* AppDelegate.swift in Sources */,
 				A524F2AC27A5EE3E0058F74A /* PhotoViewCell.swift in Sources */,
+				A5EA901327AA8E3A00ACCA2A /* extension + UIView.swift in Sources */,
 				A57B333F2794884200F7F3FE /* DetailInfoButton.swift in Sources */,
 				A5737FC627711C66008B2432 /* NewsFeedViewCell.swift in Sources */,
 				A57B333D2794592A00F7F3FE /* UserRequestParams.swift in Sources */,

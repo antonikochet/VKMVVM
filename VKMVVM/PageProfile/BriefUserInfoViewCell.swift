@@ -57,12 +57,7 @@ class BriefUserInfoViewCell: UITableViewCell {
         
         followesView.addTarget(self, action: #selector(touchFollowersButton), for: .touchUpInside)
         
-        let padding = StaticSizesPageProfileCell.paddingBriefUserStack
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding.top),
-            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding.left),
-            stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding.right),
-            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding.bottom)])
+        stack.fillSuperview(padding: StaticSizesPageProfileCell.paddingBriefUserStack)
     }
     
     required init?(coder: NSCoder) {

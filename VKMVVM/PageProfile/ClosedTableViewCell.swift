@@ -46,21 +46,23 @@ class ClosedTableViewCell: UITableViewCell {
         contentView.backgroundColor = UIColor(named: "NewsFeedView")
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
+        contentView.fillSuperview(padding: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15))
+        
+        lockImageView.anchor(top: contentView.topAnchor,
+                             leading: contentView.leadingAnchor,
+                             bottom: nil,
+                             trailing: nil, padding: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 0))
+        
+        warningLabel.anchor(top: contentView.topAnchor,
+                            leading: lockImageView.trailingAnchor,
+                            bottom: nil,
+                            trailing: contentView.trailingAnchor,
+                            padding: UIEdgeInsets(top: 16, left: 8, bottom: 0, right: 0))
+        
         NSLayoutConstraint.activate([
-            lockImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            lockImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             lockImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
             lockImageView.widthAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
         
-            warningLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            warningLabel.leadingAnchor.constraint(equalTo: lockImageView.trailingAnchor, constant: 8),
-            warningLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-        
-            contentView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            contentView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            
             deletedLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             deletedLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
             ])

@@ -49,21 +49,23 @@ class AlbumViewCell: UICollectionViewCell {
         addSubview(nameAlbumLabel)
         addSubview(countPhotosAlbumLabel)
         
-        NSLayoutConstraint.activate([
-            thumbImage.topAnchor.constraint(equalTo: topAnchor),
-            thumbImage.leadingAnchor.constraint(equalTo: leadingAnchor),
-            thumbImage.trailingAnchor.constraint(equalTo: trailingAnchor),
-            thumbImage.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 3/4),
+        thumbImage.anchor(top: topAnchor,
+                          leading: leadingAnchor,
+                          bottom: nil,
+                          trailing: trailingAnchor,
+                          padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+        thumbImage.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 3/4).isActive = true
         
-            nameAlbumLabel.topAnchor.constraint(equalTo: thumbImage.bottomAnchor, constant: 4),
-            nameAlbumLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            nameAlbumLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            countPhotosAlbumLabel.topAnchor.constraint(equalTo: nameAlbumLabel.bottomAnchor, constant: 2),
-            countPhotosAlbumLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            countPhotosAlbumLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            countPhotosAlbumLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        nameAlbumLabel.anchor(top: thumbImage.bottomAnchor,
+                              leading: leadingAnchor,
+                              bottom: nil,
+                              trailing: trailingAnchor,
+                              padding: UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0))
+        
+        countPhotosAlbumLabel.anchor(top: nameAlbumLabel.bottomAnchor,
+                                     leading: leadingAnchor,
+                                     bottom: bottomAnchor,
+                                     trailing: trailingAnchor, padding: UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0))
     }
     
     required init?(coder: NSCoder) {

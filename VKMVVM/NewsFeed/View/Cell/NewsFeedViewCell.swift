@@ -95,21 +95,24 @@ class NewsFeedViewCell: UITableViewCell {
         
         contentPostView.addGestureRecognizerForAttachment(target: self,action: #selector(showDetailGalleryPhotos))
         
-        NSLayoutConstraint.activate([
-            topView.topAnchor.constraint(equalTo: topAnchor, constant: StaticSizesNewsFeedCell.topConstraintTopView),
-            topView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topView.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightTopView),
+        topView.anchor(top: topAnchor,
+                       leading: leadingAnchor,
+                       bottom: nil,
+                       trailing: trailingAnchor,
+                       padding: UIEdgeInsets(top: StaticSizesNewsFeedCell.topConstraintTopView,
+                                             left: 0, bottom: 0, right: 0))
+        topView.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightTopView).isActive = true
         
-            contentPostView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentPostView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentPostView.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            contentPostView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            
-            bottomView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightBottomView),
-            bottomView.bottomAnchor.constraint(equalTo: bottomAnchor)])
+        contentPostView.anchor(top: topView.bottomAnchor,
+                               leading: leadingAnchor,
+                               bottom: bottomView.topAnchor,
+                               trailing: trailingAnchor)
+        
+        bottomView.anchor(top: nil,
+                          leading: leadingAnchor,
+                          bottom: bottomAnchor,
+                          trailing: trailingAnchor)
+        bottomView.heightAnchor.constraint(equalToConstant: StaticSizesNewsFeedCell.heightBottomView).isActive = true
     }
     
     required init?(coder: NSCoder) {

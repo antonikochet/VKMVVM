@@ -58,25 +58,30 @@ class FriendCollectionViewCell: UICollectionViewCell {
         addSubview(lastNameLabel)
         addSubview(onlineImage)
         
-        NSLayoutConstraint.activate([
-            iconImage.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-            iconImage.leadingAnchor.constraint(equalTo: leadingAnchor),
-            iconImage.trailingAnchor.constraint(equalTo: trailingAnchor),
-            iconImage.heightAnchor.constraint(equalTo: widthAnchor),
+        iconImage.anchor(top: topAnchor,
+                         leading: leadingAnchor,
+                         bottom: nil,
+                         trailing: trailingAnchor,
+                         padding: UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0))
+        iconImage.heightAnchor.constraint(equalTo: widthAnchor).isActive = true
         
-            firstNameLabel.topAnchor.constraint(equalTo: iconImage.bottomAnchor, constant: 2),
-            firstNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            firstNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            lastNameLabel.topAnchor.constraint(equalTo: firstNameLabel.topAnchor, constant: 2),
-            lastNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            lastNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            lastNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+        firstNameLabel.anchor(top: iconImage.bottomAnchor,
+                              leading: leadingAnchor,
+                              bottom: nil,
+                              trailing: trailingAnchor,
+                              padding: UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0))
         
-            onlineImage.trailingAnchor.constraint(equalTo: iconImage.trailingAnchor),
-            onlineImage.bottomAnchor.constraint(equalTo: iconImage.bottomAnchor),
-            onlineImage.heightAnchor.constraint(equalToConstant: 15),
-            onlineImage.widthAnchor.constraint(equalToConstant: 15)])
+        lastNameLabel.anchor(top: firstNameLabel.topAnchor,
+                             leading: leadingAnchor,
+                             bottom: bottomAnchor,
+                             trailing: trailingAnchor,
+                             padding: UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0))
+       
+        onlineImage.anchor(top: nil,
+                           leading: nil,
+                           bottom: iconImage.bottomAnchor,
+                           trailing: iconImage.trailingAnchor,
+                           size: CGSize(width: 15, height: 15))
     }
     
     required init?(coder: NSCoder) {

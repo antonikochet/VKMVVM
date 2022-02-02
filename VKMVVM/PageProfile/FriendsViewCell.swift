@@ -56,12 +56,11 @@ class FriendsViewCell: UITableViewCell {
         friendsCollectionView.dataSource = self
         
         headerView.setupConstraints(superView: contentView)
-        NSLayoutConstraint.activate([
-            friendsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
-            friendsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            friendsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            friendsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        friendsCollectionView.anchor(top: headerView.bottomAnchor,
+                                     leading: contentView.leadingAnchor,
+                                     bottom: contentView.bottomAnchor,
+                                     trailing: contentView.trailingAnchor,
+                                     padding: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8))
     }
     
     required init?(coder: NSCoder) {

@@ -57,12 +57,11 @@ class PhotosGalleryProfileViewCell: UITableViewCell {
         photosCollectionView.dataSource = self
         
         headerView.setupConstraints(superView: contentView)
-        NSLayoutConstraint.activate([
-            photosCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
-            photosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            photosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            photosCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        
+        photosCollectionView.anchor(top: headerView.bottomAnchor,
+                                    leading: contentView.leadingAnchor,
+                                    bottom: contentView.bottomAnchor,
+                                    trailing: contentView.trailingAnchor)
     }
     
     required init?(coder: NSCoder) {

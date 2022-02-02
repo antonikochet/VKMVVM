@@ -45,11 +45,14 @@ class AlbumsViewCell: UITableViewCell {
         albumsCollectionView.delegate = self
         
         headerView.setupConstraints(superView: contentView)
-        NSLayoutConstraint.activate([
-            albumsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: StaticSizesUniversalViews.topConstantContentCell),
-            albumsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            albumsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            albumsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)])
+        albumsCollectionView.anchor(top: headerView.bottomAnchor,
+                                    leading: contentView.leadingAnchor,
+                                    bottom: contentView.bottomAnchor,
+                                    trailing: contentView.trailingAnchor,
+                                    padding: UIEdgeInsets(top: StaticSizesUniversalViews.topConstantContentCell,
+                                                          left: 8,
+                                                          bottom: 0,
+                                                          right: 8))
     }
     
     required init?(coder: NSCoder) {

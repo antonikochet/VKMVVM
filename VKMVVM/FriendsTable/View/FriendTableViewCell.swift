@@ -57,22 +57,33 @@ class FriendTableViewCell: UITableViewCell {
         contentView.addSubview(onlineImage)
         
         let paddingIcon: CGFloat = 2
+        
+        iconUser.anchor(top: contentView.topAnchor,
+                        leading: contentView.leadingAnchor,
+                        bottom: contentView.bottomAnchor,
+                        trailing: nil,
+                        padding: UIEdgeInsets(top: paddingIcon, left: 8, bottom: paddingIcon, right: 0))
+        
+        fullNameLabel.anchor(top: contentView.topAnchor,
+                             leading: iconUser.trailingAnchor,
+                             bottom: nil,
+                             trailing: contentView.trailingAnchor,
+                             padding: UIEdgeInsets(top: 4, left: 16, bottom: 0, right: 0))
+        
+        extraDataLabel.anchor(top: fullNameLabel.bottomAnchor,
+                              leading: iconUser.trailingAnchor,
+                              bottom: nil,
+                              trailing: contentView.trailingAnchor,
+                              padding: UIEdgeInsets(top: 4, left: 16, bottom: 0, right: 0))
+        
+        onlineImage.anchor(top: nil,
+                           leading: nil,
+                           bottom: iconUser.bottomAnchor,
+                           trailing: iconUser.trailingAnchor)
+        
         NSLayoutConstraint.activate([
-            iconUser.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            iconUser.topAnchor.constraint(equalTo: contentView.topAnchor, constant: paddingIcon),
-            iconUser.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -paddingIcon),
             iconUser.widthAnchor.constraint(equalTo: contentView.heightAnchor, constant: -paddingIcon * 2),
         
-            fullNameLabel.leadingAnchor.constraint(equalTo: iconUser.trailingAnchor, constant: 16),
-            fullNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            fullNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            extraDataLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 4),
-            extraDataLabel.leadingAnchor.constraint(equalTo: iconUser.trailingAnchor, constant: 16),
-            extraDataLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            onlineImage.trailingAnchor.constraint(equalTo: iconUser.trailingAnchor),
-            onlineImage.bottomAnchor.constraint(equalTo: iconUser.bottomAnchor),
             onlineImage.heightAnchor.constraint(equalToConstant: 15),
             onlineImage.widthAnchor.constraint(equalToConstant: 15)])
     }

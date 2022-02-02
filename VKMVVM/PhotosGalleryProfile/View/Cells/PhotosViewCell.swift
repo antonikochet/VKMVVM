@@ -55,11 +55,12 @@ class PhotosViewCell: UITableViewCell {
         photosCollectionView.delegate = self
         
         headerView.setupConstraints(superView: contentView)
-        NSLayoutConstraint.activate([
-            photosCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: StaticSizesUniversalViews.topConstantContentCell),
-            photosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            photosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            photosCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)])
+        photosCollectionView.anchor(top: headerView.bottomAnchor,
+                                    leading: contentView.leadingAnchor,
+                                    bottom: contentView.bottomAnchor,
+                                    trailing: contentView.trailingAnchor,
+                                    padding: UIEdgeInsets(top: StaticSizesUniversalViews.topConstantContentCell,
+                                                          left: 0, bottom: 0, right: 0))
     }
     
     required init?(coder: NSCoder) {
