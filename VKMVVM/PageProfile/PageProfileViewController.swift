@@ -121,6 +121,7 @@ extension PageProfileViewController: UITableViewDataSource {
                 let custemCell = tableView.dequeueReusableCell(withIdentifier: PhotosGalleryProfileViewCell.identifier, for: indexPath) as! PhotosGalleryProfileViewCell
                 if let viewModel = viewModel?.getGalleryPhotos() {
                     custemCell.set(viewModel: viewModel)
+                    custemCell.delegate = self
                 }
                 return custemCell
             default:
@@ -137,7 +138,7 @@ extension PageProfileViewController: UITableViewDelegate {
                 return StaticSizesPageProfileCell.heigthHeaderProfileCell
             case IndexPath(row: 1, section: 0):
                 guard let viewModel = viewModel?.getBriefUserInfo() else { return 0 }
-                return CalculatorSizes.calculateSizeBriefUserInfo(viewModel: viewModel)
+                return BriefUserInfoViewCell.CalculatorSizes.calculateHeightBriefUserInfoCell(viewModel: viewModel)
             case IndexPath(row: 2, section: 0):
                 if viewModel?.isClosed ?? false {
                     return StaticSizesPageProfileCell.heightClosedCell
@@ -145,7 +146,7 @@ extension PageProfileViewController: UITableViewDelegate {
                     return StaticSizesPageProfileCell.heightFriendsCell
                 }
             case IndexPath(row: 3, section: 0):
-                return viewModel?.isClosed ?? true || viewModel?.isEmptyPhotos ?? true ? 0 : CalculatorSizes.calculateSizePhotosGalleryCell(widthSuperView: view.frame.width)
+                return viewModel?.isClosed ?? true || viewModel?.isEmptyPhotos ?? true ? 0 : PhotosGalleryProfileViewCell.CalculatorSizes.calculateHeightPhotosGalleryCell(widthSuperView: view.frame.width)
             default:
                 return 0
         }
@@ -186,4 +187,15 @@ extension PageProfileViewController: BriefUserInfoViewCellDelegate {
         let followersTableVC = Configurator.conficuratorFollowerTable(userId: userId)
         navigationController?.pushViewController(followersTableVC, animated: true)
     }
+}
+
+extension PageProfileViewController: PhotosGalleryProfileViewCellDelegate {
+    func showDetailPhotos(beginIndex: Int) {
+        if let photos = viewModel?.showDetailGalleryPhotos(), !photos.isEmpty {
+            let vc = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: beginIndex)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    
 }

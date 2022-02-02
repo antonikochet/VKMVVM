@@ -30,7 +30,7 @@ class BriefUserInfoViewCell: UITableViewCell {
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.alignment = .leading
-        stack.spacing = StaticSizesPageProfileCell.spacingBriefUserLabel
+        stack.spacing = CalculatorSizes.spacingBriefUserLabel
         return stack
     }()
     
@@ -88,5 +88,30 @@ class BriefUserInfoViewCell: UITableViewCell {
     
     @objc private func touchFollowersButton() {
         delegate?.showFollowersTable()
+    }
+}
+
+extension BriefUserInfoViewCell {
+    struct CalculatorSizes {
+        
+        static let spacingBriefUserLabel: CGFloat = 8
+        private static let heightBriefUserLabel: CGFloat = 30
+        private static let paddingBriefUserStack: UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        
+        static func calculateHeightBriefUserInfoCell(viewModel: BriefUserInfoViewModelType) -> CGFloat {
+            var count: CGFloat = 0
+            count += viewModel.city != nil && !viewModel.city!.isEmpty ? 1 : 0
+            count += viewModel.education != nil && !viewModel.education!.isEmpty ? 1 : 0
+            count += viewModel.work != nil && !viewModel.work!.isEmpty ? 1 : 0
+            count += viewModel.followes != nil && !viewModel.followes!.isEmpty ? 1 : 0
+            
+            let briefInfoButton = heightBriefUserLabel + spacingBriefUserLabel
+            let height = (paddingBriefUserStack.top +
+                          count * heightBriefUserLabel +
+                          paddingBriefUserStack.bottom +
+                          (count - 1) * spacingBriefUserLabel +
+                          briefInfoButton)
+            return height
+        }
     }
 }

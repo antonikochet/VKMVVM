@@ -15,6 +15,7 @@ protocol PageProfileViewModelType {
     func getFriendsList() -> FriendsListViewModelType?
     func getFriendsResponse() -> FriendsResponse?
     func getGalleryPhotos() -> PhotoListViewModelType?
+    func showDetailGalleryPhotos() -> [Photo]
     var isClosed: Bool { get }
     var isDeleted: Bool { get }
     var nickName: String { get }
@@ -193,6 +194,10 @@ extension PageProfileViewModel: PageProfileViewModelType {
                                   photoList: photos)
         
         return photoList
+    }
+    
+    func showDetailGalleryPhotos() -> [Photo] {
+        return photosUserResponse?.items ?? []
     }
     
     func loadProfileInfo() {

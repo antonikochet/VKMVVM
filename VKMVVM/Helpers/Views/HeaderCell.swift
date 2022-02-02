@@ -43,6 +43,14 @@ class HeaderCell: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setupConstraints(superView: UIView) {
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: superView.topAnchor, constant: StaticSizesUniversalViews.topConstantLabelCell),
+            self.leadingAnchor.constraint(equalTo: superView.leadingAnchor),
+            self.trailingAnchor.constraint(equalTo: superView.trailingAnchor),
+            self.heightAnchor.constraint(equalToConstant: StaticSizesUniversalViews.fontLabelCell.lineHeight)])
+    }
+    
     func set(count: String?) {
         countLabel.text = count
     }

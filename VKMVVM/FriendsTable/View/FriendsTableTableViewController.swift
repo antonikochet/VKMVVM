@@ -21,6 +21,7 @@ class FriendsTableTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.register(FriendTableViewCell.self, forCellReuseIdentifier: FriendTableViewCell.identifier)
         tableView.refreshControl = refresh
+        navigationItem.title = "Друзья"
     }
 
     // MARK: - Table view data source

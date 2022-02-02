@@ -12,9 +12,15 @@ protocol PhotosCellViewModelType {
     var urlPhotos: [String?] { get }
 }
 
+protocol PhotosViewCellDelegate: AnyObject {
+    func showDetailGalleryPhotos(index: Int)
+}
+
 class PhotosViewCell: UITableViewCell {
     
     static let identifier = "PhotosViewCell"
+
+    weak var delegate: PhotosViewCellDelegate?
     
     private var viewModel: PhotosCellViewModelType? {
         didSet {
@@ -40,6 +46,7 @@ class PhotosViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         
         contentView.addSubview(headerView)
         contentView.addSubview(photosCollectionView)
@@ -47,12 +54,8 @@ class PhotosViewCell: UITableViewCell {
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
         
+        headerView.setupConstraints(superView: contentView)
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: StaticSizesUniversalViews.topConstantLabelCell),
-            headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: StaticSizesUniversalViews.fontLabelCell.lineHeight),
-        
             photosCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: StaticSizesUniversalViews.topConstantContentCell),
             photosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             photosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -79,6 +82,12 @@ extension PhotosViewCell: UICollectionViewDataSource {
         let urlImage = viewModel?.urlPhotos[indexPath.row]
         cell.set(urlImage: urlImage)
         return cell
+    }
+}
+
+extension PhotosViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.showDetailGalleryPhotos(index: indexPath.row)
     }
 }
 

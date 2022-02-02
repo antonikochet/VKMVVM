@@ -11,6 +11,7 @@ protocol PhotosGalleryProfileViewModelType {
     func startLoadData()
     func getAlbums() -> AlbumsCellViewModelType?
     func getPhotos() -> PhotosCellViewModelType?
+    func getPhotosForDetailShow() -> [Photo]
 }
 
 class PhotosGalleryProfileTableViewController: UITableViewController {
@@ -22,6 +23,7 @@ class PhotosGalleryProfileTableViewController: UITableViewController {
         tableView.register(AlbumsViewCell.self, forCellReuseIdentifier: AlbumsViewCell.identifier)
         tableView.register(PhotosViewCell.self, forCellReuseIdentifier: PhotosViewCell.identifier)
         viewModel?.startLoadData()
+        navigationItem.title = "Фотографии"
     }
 
     // MARK: - Table view data source
@@ -41,6 +43,7 @@ class PhotosGalleryProfileTableViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: PhotosViewCell.identifier, for: indexPath) as! PhotosViewCell
                 if let photosViewModel = viewModel?.getPhotos() {
                     cell.set(viewModel: photosViewModel)
+                    cell.delegate = self
                 }
                 return cell
             default:
@@ -69,6 +72,14 @@ extension PhotosGalleryProfileTableViewController: PhotosGalleryProfileDelegate 
     
     func showError(_ error: Error) {
         print(error)
+    }
+}
+
+extension PhotosGalleryProfileTableViewController: PhotosViewCellDelegate {
+    func showDetailGalleryPhotos(index: Int) {
+        guard let photos = viewModel?.getPhotosForDetailShow(), !photos.isEmpty else { return }
+        let vc = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: index)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     

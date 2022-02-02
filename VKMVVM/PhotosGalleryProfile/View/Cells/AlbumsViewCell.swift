@@ -30,11 +30,13 @@ class AlbumsViewCell: UITableViewCell {
         let collView = UICollectionView(frame: .zero, collectionViewLayout: collLayout)
         collView.register(AlbumViewCell.self, forCellWithReuseIdentifier: AlbumViewCell.identifier)
         collView.translatesAutoresizingMaskIntoConstraints = false
+        collView.showsHorizontalScrollIndicator = false
         return collView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         
         contentView.addSubview(headerView)
         contentView.addSubview(albumsCollectionView)
@@ -42,12 +44,8 @@ class AlbumsViewCell: UITableViewCell {
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         
+        headerView.setupConstraints(superView: contentView)
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: StaticSizesUniversalViews.topConstantLabelCell),
-            headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: StaticSizesUniversalViews.fontLabelCell.lineHeight),
-        
             albumsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: StaticSizesUniversalViews.topConstantContentCell),
             albumsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             albumsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
@@ -60,7 +58,7 @@ class AlbumsViewCell: UITableViewCell {
     
     func set(viewModel: AlbumsCellViewModelType) {
         self.viewModel = viewModel
-        headerView.set(count: viewModel.count.description)
+        headerView.set(count: String(viewModel.count))
         albumsCollectionView.reloadData()
     }
 }

@@ -28,20 +28,10 @@ class FriendsViewCell: UITableViewCell {
         }
     }
     
-    private let label: UILabel = {
-        let label = UILabel()
-        label.text = "ДРУЗЬЯ"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let countFriendsLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .systemGray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let headerView: HeaderCell = {
+        let view = HeaderCell(title: "ДРУЗЬЯ")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let friendsCollectionView: UICollectionView = {
@@ -59,21 +49,15 @@ class FriendsViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         
-        contentView.addSubview(label)
-        contentView.addSubview(countFriendsLabel)
+        contentView.addSubview(headerView)
         contentView.addSubview(friendsCollectionView)
         
         friendsCollectionView.delegate = self
         friendsCollectionView.dataSource = self
         
+        headerView.setupConstraints(superView: contentView)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            
-            countFriendsLabel.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
-            countFriendsLabel.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-
-            friendsCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
+            friendsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
             friendsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             friendsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             friendsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
@@ -85,7 +69,7 @@ class FriendsViewCell: UITableViewCell {
     }
     
     func set(viewModel: FriendsListViewModelType) {
-        countFriendsLabel.text = viewModel.countFriends.description
+        headerView.set(count: String(viewModel.countFriends))
         self.viewModel = viewModel
     }
 }

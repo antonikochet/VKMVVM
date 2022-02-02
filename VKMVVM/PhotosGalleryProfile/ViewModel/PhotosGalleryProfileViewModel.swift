@@ -95,6 +95,10 @@ extension PhotosGalleryProfileViewModel: PhotosGalleryProfileViewModelType {
         return photosViewModel
     }
     
+    func getPhotosForDetailShow() -> [Photo] {
+        return photos
+    }
+    
     func startLoadData() {
         self.getAlbumsProfile()
         self.getAllPhotosProfile(offset: 0)

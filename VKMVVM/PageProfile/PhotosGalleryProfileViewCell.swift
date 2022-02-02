@@ -12,9 +12,15 @@ protocol PhotoListViewModelType {
     var photoList: [DetailPhotoViewModelType] { get }
 }
 
+protocol PhotosGalleryProfileViewCellDelegate: AnyObject {
+    func showDetailPhotos(beginIndex: Int)
+}
+
 class PhotosGalleryProfileViewCell: UITableViewCell {
 
     static let identifier = "PhotosGalleryProfileViewCell"
+    
+    weak var delegate: PhotosGalleryProfileViewCellDelegate?
     
     private var viewModel: PhotoListViewModelType? {
         didSet {
@@ -22,20 +28,10 @@ class PhotosGalleryProfileViewCell: UITableViewCell {
         }
     }
     
-    private let label: UILabel = {
-        let label = UILabel()
-        label.text = "ФОТОГРАФИИ"
-        label.translatesAutoresizingMaskIntoConstraints  = false
-        label.font = StaticSizesPageProfileCell.fontCellsLabel
-        return label
-    }()
-    
-    private let countPhotosLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .systemGray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let headerView: HeaderCell = {
+        let view = HeaderCell(title: "ФОТОГРАФИИ")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let photosCollectionView: UICollectionView = {
@@ -54,25 +50,18 @@ class PhotosGalleryProfileViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         
-        contentView.addSubview(label)
-        contentView.addSubview(countPhotosLabel)
+        contentView.addSubview(headerView)
         contentView.addSubview(photosCollectionView)
         
         photosCollectionView.delegate = self
         photosCollectionView.dataSource = self
         
-        let paddingCollView = StaticSizesPageProfileCell.paddingPhotoCollectionView
+        headerView.setupConstraints(superView: contentView)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: StaticSizesPageProfileCell.topConstantLabelInCollectionView),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            
-            countPhotosLabel.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
-            countPhotosLabel.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-
-            photosCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: paddingCollView.top),
-            photosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: paddingCollView.left),
-            photosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -paddingCollView.right),
-            photosCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -paddingCollView.bottom)
+            photosCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            photosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            photosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            photosCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
@@ -81,7 +70,7 @@ class PhotosGalleryProfileViewCell: UITableViewCell {
     }
     
     func set(viewModel: PhotoListViewModelType) {
-        countPhotosLabel.text = viewModel.countPhoto
+        headerView.set(count: viewModel.countPhoto)
         self.viewModel = viewModel
     }
 }
@@ -100,16 +89,58 @@ extension PhotosGalleryProfileViewCell: UICollectionViewDataSource {
     }
 }
 
+extension PhotosGalleryProfileViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.showDetailPhotos(beginIndex: indexPath.row)
+    }
+}
+
 extension PhotosGalleryProfileViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CalculatorSizes.calculateSizeCellPhoto(widthSuperView: frame.width - (StaticSizesPageProfileCell.paddingPhotoCollectionView.left + StaticSizesPageProfileCell.paddingPhotoCollectionView.right))
+        return CalculatorSizes.calculateSizeCellPhoto(widthSuperView: frame.width - (CalculatorSizes.paddingCollectionView.left + CalculatorSizes.paddingCollectionView.right))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return StaticSizesPageProfileCell.paddingPhotoGallery.left
+        return CalculatorSizes.paddingItem
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return CalculatorSizes.paddingItem
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return StaticSizesPageProfileCell.paddingPhotoGallery
+        return CalculatorSizes.paddingCollectionView
+    }
+}
+
+extension PhotosGalleryProfileViewCell {
+    struct CalculatorSizes {
+    
+        static let paddingItem: CGFloat = 3
+        static let paddingCollectionView = UIEdgeInsets(top: StaticSizesUniversalViews.topConstantContentCell,
+                                                        left: 8, bottom: 0, right: 8)
+        
+        private static let itemsPerRow: CGFloat = 3
+        private static let itemsInColomn: CGFloat = 2
+    
+        static func calculateHeightPhotosGalleryCell(widthSuperView: CGFloat) -> CGFloat {
+            let heightCell = (StaticSizesUniversalViews.topConstantLabelCell +
+                              StaticSizesUniversalViews.fontLabelCell.lineHeight)
+            
+            let sizeCell = calculateSizeCellPhoto(widthSuperView: widthSuperView)
+            
+            let paddingSpaceColomn = paddingItem * (itemsInColomn - 1)
+            let heightColomn = sizeCell.height * itemsInColomn + paddingSpaceColomn
+            
+            return heightCell + heightColomn
+        }
+        
+        static func calculateSizeCellPhoto(widthSuperView: CGFloat) -> CGSize {
+            let paddingSpace = paddingItem * (itemsPerRow + 1)
+            let availableWidth = widthSuperView - paddingSpace
+            let widthPerItem = availableWidth / itemsPerRow
+            
+            return CGSize(width: widthPerItem, height: widthPerItem)
+        }
     }
 }
