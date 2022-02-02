@@ -31,7 +31,10 @@ class PhotosGalleryProfileViewModel {
     
     private func getAlbumsProfile() {
         dispatchGroup.enter()
-        dataFetcher.getAlbums(ownerId: userId, photoSizes: true, needSystem: true) { [weak self] result in
+        let requestParametrs = AlbumsRequestParams(ownerId: userId,
+                                                   photoSizes: true,
+                                                   needSystem: true)
+        dataFetcher.getAlbums(parametrs: requestParametrs) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):
@@ -45,7 +48,12 @@ class PhotosGalleryProfileViewModel {
     
     private func getAllPhotosProfile(offset: Int, count: Int? = nil) {
         dispatchGroup.enter()
-        dataFetcher.getAllPhotos(ownerId: userId, extended: true, offset: offset, count: count, skipHidden: true) { [weak self] result in
+        let requestParams = GetAllPhotosRequestParams(ownerId: userId,
+                                                      offset: offset,
+                                                      count: count,
+                                                      extended: true,
+                                                      skipHidden: true)
+        dataFetcher.getAllPhotos(parametrs: requestParams) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):

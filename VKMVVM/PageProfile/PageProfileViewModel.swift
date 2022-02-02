@@ -55,8 +55,9 @@ class PageProfileViewModel {
     
     private func getProfileInformation() {
         let fieldsParams = UserRequestFieldsParams.allCases
-        
-        dataFetcher.getProfileInfo(userId: userId, fieldsParams: fieldsParams) { [weak self] result in
+        let request = UserRequestParams(userIds: userId,
+                                        fields: fieldsParams)
+        dataFetcher.getProfileInfo(parametrs: request) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):
@@ -74,7 +75,12 @@ class PageProfileViewModel {
     }
     
     private func getFriends() {
-        dataFetcher.getFriends(userId: userId, fieldsParams: [.photo100, .online, .city], orderParams: .hints) {  [weak self] result in
+        let request = FriendsRequestParams(userId: userId,
+                                           order: .hints,
+                                           count: nil,
+                                           offset: nil,
+                                           fields: [.photo100, .online, .city])
+        dataFetcher.getFriends(parametrs: request) {  [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):
@@ -92,7 +98,11 @@ class PageProfileViewModel {
     }
     
     private func getMainPhotosProfile() {
-        dataFetcher.getPhotos(ownerId: userId, photoIds: nil, albumId: .profile, extended: true) { [weak self] result in
+        let requestParams = PhotosRequestParams(ownerId: userId,
+                                                photoIds: nil,
+                                                albumId: .profile,
+                                                extended: true)
+        dataFetcher.getPhotos(parametrs: requestParams) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):
@@ -105,7 +115,12 @@ class PageProfileViewModel {
     }
     
     private func getFullPhotosUser() {
-        dataFetcher.getAllPhotos(ownerId: userId, extended: true, offset: nil, count: 20, skipHidden: false) { [weak self] result in
+        let requestParams = GetAllPhotosRequestParams(ownerId: userId,
+                                                      offset: nil,
+                                                      count: 20,
+                                                      extended: true,
+                                                      skipHidden: false)
+        dataFetcher.getAllPhotos(parametrs: requestParams) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 case .success(let response):

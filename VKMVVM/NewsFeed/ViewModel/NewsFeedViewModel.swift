@@ -47,7 +47,10 @@ class NewsFeedViewModel {
     }
     
     private func getNewsFeed(_ startFrom: String?) {
-        dataFetcher.getNewsFeed(startFrom: startFrom, paramsFilter: [.phone, .post]) { result in
+        let request = NewsFeedParams(filters: [.post, .phone],
+                                        startFrom: startFrom)
+
+        dataFetcher.getNewsFeed(parametrs: request) { result in
             switch result {
                 case .success(let response):
                     self.updateResponseData(response.response)

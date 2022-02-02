@@ -15,7 +15,21 @@ enum NewsFeedFiltersParams: String {
     }
 }
 
-enum NewsFeedParams: String {
-    case filters
-    case startFrom = "start_from"
+struct NewsFeedParams: RequestParamsProtocol {
+    let filters: [NewsFeedFiltersParams]
+    let startFrom: String?
+    
+    func generateParametrsForRequest() -> Parametrs {
+        var params: Parametrs = [:]
+        params[NameParams.filters.rawValue] = NewsFeedFiltersParams.params(filters)
+        if let startFrom = startFrom {
+            params[NameParams.startFrom.rawValue] = startFrom
+        }
+        return params
+    }
+    
+    private enum NameParams: String {
+        case filters
+        case startFrom = "start_from"
+    }
 }

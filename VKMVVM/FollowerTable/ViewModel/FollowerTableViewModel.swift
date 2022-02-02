@@ -32,7 +32,9 @@ class FollowerTableViewModel {
     }
     
     private func getFollowers() {
-        dataFetcher.getFollowers(userId: userId, fieldsParams: [.online, .photo100]) { result in
+        let requestParametrs = UsersGetFollowersRequestParams(userId: userId,
+                                                              fields: [.online, .photo100])
+        dataFetcher.getFollowers(parametrs: requestParametrs) { result in
             switch result {
                 case .success(let response):
                     self.cells = response.response.items.map { item in

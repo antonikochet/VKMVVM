@@ -7,15 +7,49 @@
 
 import Foundation
 
-enum UserRequestParams: String {
-    case userIds = "user_ids"
-    case fields
+struct UserRequestParams: RequestParamsProtocol {
+   
+    let userIds: String?
+    let fields: [UserRequestFieldsParams]
+    
+    func generateParametrsForRequest() -> Parametrs {
+        var paramets: Parametrs = [:]
+        paramets[NameRequestParams.fields.rawValue] = UserRequestFieldsParams.params(fields)
+        if let userIds = userIds {
+            paramets[NameRequestParams.userIds.rawValue] = userIds
+        }
+        return paramets
+    }
+    
+    private enum NameRequestParams: String {
+        case userIds = "user_ids"
+        case fields
+    }
 }
 
-enum UsersGetFollowersRequestParams: String {
-    case userId = "user_id"
-    case fields
+struct UsersGetFollowersRequestParams: RequestParamsProtocol {
+    
+    let userId: String?
+    let fields: [UserRequestFieldsParams]
+    
+    func generateParametrsForRequest() -> Parametrs {
+        var parametrs: Parametrs = [:]
+        if let userId = userId {
+            parametrs[NameRequestParams.userId.rawValue] = userId
+        }
+        if !fields.isEmpty {
+            parametrs[NameRequestParams.fields.rawValue] = UserRequestFieldsParams.params(fields)
+        }
+        
+        return parametrs
+    }
+    
+    private enum NameRequestParams: String {
+        case userId = "user_id"
+        case fields
+    }
 }
+
 
 enum UserRequestFieldsParams: String, CaseIterable {
     case birthdayData = "bdate"

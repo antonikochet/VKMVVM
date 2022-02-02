@@ -7,12 +7,34 @@
 
 import Foundation
 
-enum FriendsRequestParams: String {
-    case userId = "user_id"
-    case order
-    case count
-    case offset
-    case fields
+struct FriendsRequestParams: RequestParamsProtocol {
+    let userId: String?
+    let order: FriendsRequestOrderParams?
+    let count: Int?
+    let offset: Int?
+    let fields: [FriendsRequestFieldsParams]?
+    
+    func generateParametrsForRequest() -> Parametrs {
+        var parametrs: Parametrs = [:]
+        if let fields = fields {
+            parametrs[NameRequestParams.fields.rawValue] = FriendsRequestFieldsParams.params(fields)
+        }
+        if let userId = userId {
+            parametrs[NameRequestParams.userId.rawValue] = userId
+        }
+        if let order = order {
+            parametrs[NameRequestParams.order.rawValue] = order.rawValue
+        }
+        return parametrs
+    }
+    
+    private enum NameRequestParams: String {
+        case userId = "user_id"
+        case order
+        case count
+        case offset
+        case fields
+    }
 }
 
 enum FriendsRequestOrderParams: String {

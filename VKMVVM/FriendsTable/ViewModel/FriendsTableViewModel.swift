@@ -38,7 +38,13 @@ class FriendsTableViewModel {
     }
     
     private func getFriends() {
-        dataFetcher?.getFriends(userId: userId, fieldsParams: [.city, .online, .photo100], orderParams: .name) { result in
+        let request = FriendsRequestParams(userId: userId,
+                                           order: .name,
+                                           count: nil,
+                                           offset: nil,
+                                           fields: [.city, .online, .photo100])
+        
+        dataFetcher?.getFriends(parametrs: request) { result in
             switch result {
                 case .success(let response):
                     self.friendsResponse = response.response
