@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol GalleryCollectionViewDelegate: AnyObject {
+    func showDetailPhoto(at index: Int)
+}
+
 class GalleryCollectionView: UICollectionView {
 
+    weak var galleryDelegate: GalleryCollectionViewDelegate?
+    
     var modelView: GalleryModelViewType? {
         didSet {
             reloadData()
@@ -35,7 +41,9 @@ class GalleryCollectionView: UICollectionView {
 }
 
 extension GalleryCollectionView: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        galleryDelegate?.showDetailPhoto(at: indexPath.row)
+    }
 }
 
 extension GalleryCollectionView: UICollectionViewDataSource {

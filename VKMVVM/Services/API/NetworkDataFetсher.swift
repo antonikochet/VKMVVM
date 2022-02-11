@@ -7,6 +7,16 @@
 
 import Foundation
 
+enum DataFetcherError: ErrorProtocol {
+    case NotValidData(String)
+    
+    var message: String {
+        switch self {
+            case .NotValidData(let method):
+                return "С сервера по запросу '\(method)' получены не валидные данные!"
+        }
+    }
+}
 
 protocol DataFetcher {
     typealias DataFetcherCompletion<T> = (Result<T, Error>) -> Void
@@ -68,7 +78,9 @@ struct NetworkDataFetcher: DataFetcher {
                 } else {
                     if let errorResponse = try? JSONDecoder().decode(ErrorResponseWrapper.self, from: data) {
                         completion(.failure(errorResponse.error))
-                    } //TODO: - исправить лаг при котором данные не декодируются при получение ошибки декодирования в response и ошибку сервера
+                    } else {
+                        completion(.failure(DataFetcherError.NotValidData(path.rawValue)))
+                    }
                 }
             }
         }

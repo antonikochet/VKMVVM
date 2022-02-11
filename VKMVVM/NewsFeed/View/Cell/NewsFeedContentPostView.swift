@@ -97,8 +97,8 @@ class NewsFeedContentPostView: UIView {
     func addGestureRecognizerForAttachment(target: Any, action: Selector) {
         postImageView.isUserInteractionEnabled = true
         let gestureImage = UITapGestureRecognizer(target: target, action: action)
-        let gestureGallery = UITapGestureRecognizer(target: target, action: action)
         postImageView.addGestureRecognizer(gestureImage)
-        galleryCollectionView.addGestureRecognizer(gestureGallery)
+        
+        galleryCollectionView.galleryDelegate = target as? GalleryCollectionViewDelegate
     }
 }

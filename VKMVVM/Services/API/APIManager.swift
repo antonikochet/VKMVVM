@@ -33,7 +33,7 @@ class APIManager: Networing {
             if let data = data {
                 completion(data, nil)
             } else {
-                completion(nil, nil) //TODO: создать ошибку для отсутсвия данных
+                completion(nil, APIError.DataNil)
             }
         }
         
@@ -50,4 +50,14 @@ class APIManager: Networing {
         return componentsURL.url!
     }
     
+}
+
+extension APIManager {
+    enum APIError: ErrorProtocol {
+        case DataNil
+        
+        var message: String {
+            "С сервера ничего не было получено."
+        }
+    }
 }

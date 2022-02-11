@@ -26,7 +26,7 @@ protocol NewsFeedCellPhotoAttachementViewModelType {
 
 protocol NewsFeedCellDelegate: AnyObject {
     func revealPost(for cell: NewsFeedViewCell)
-    func showDetailGalleryPhotos(for cell: NewsFeedViewCell)
+    func showDetailGalleryPhotos(for cell: NewsFeedViewCell, at index: Int)
     func touchLikeNewsFeedPost(for cell: NewsFeedViewCell)
 }
 
@@ -97,7 +97,7 @@ class NewsFeedViewCell: UITableViewCell {
         addSubview(contentPostView)
         addSubview(bottomView)
         
-        contentPostView.addGestureRecognizerForAttachment(target: self,action: #selector(showDetailGalleryPhotos))
+        contentPostView.addGestureRecognizerForAttachment(target: self,action: #selector(showDetailPhotoPost))
         
         topView.anchor(top: topAnchor,
                        leading: leadingAnchor,
@@ -166,11 +166,17 @@ class NewsFeedViewCell: UITableViewCell {
         delegate?.revealPost(for: self)
     }
     
-    @objc func showDetailGalleryPhotos() {
-        delegate?.showDetailGalleryPhotos(for: self)
+    @objc func showDetailPhotoPost() {
+        delegate?.showDetailGalleryPhotos(for: self, at: 0)
     }
     
     @objc func touchLikeButton() {
         delegate?.touchLikeNewsFeedPost(for: self)
+    }
+}
+
+extension NewsFeedViewCell: GalleryCollectionViewDelegate {
+    func showDetailPhoto(at index: Int) {
+        delegate?.showDetailGalleryPhotos(for: self, at: index)
     }
 }

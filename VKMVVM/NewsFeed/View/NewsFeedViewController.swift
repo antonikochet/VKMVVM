@@ -117,11 +117,11 @@ extension NewsFeedViewController: NewsFeedCellDelegate {
         viewModel.revealPost(cellViewModel.postId)
     }
     
-    func showDetailGalleryPhotos(for cell: NewsFeedViewCell) {
+    func showDetailGalleryPhotos(for cell: NewsFeedViewCell, at index: Int) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photos = viewModel.getPhotosFromItems(by: indexPath.row)
         
-        let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: 0) //TODO: добавить опредление индекса нажатой фотографии
+        let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: index)
         
         navigationController?.pushViewController(galleryVC, animated: true)
     }
