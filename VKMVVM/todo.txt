@@ -1,2 +1,3 @@
-. optimize request pageprofile for only update tableview
 . cached user's info for show off internet or before downloading data
+
+. add detail info profile view

@@ -151,11 +151,13 @@ extension PageProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
             case IndexPath(row: 2, section: 0):
-                let response = viewModel?.getFriendsResponse()
-                let frindsTableVC = Configurator.configuratorFriendsTable(friends: response)
-                navigationController?.pushViewController(frindsTableVC, animated: true)
+                if let response = viewModel?.getFriendsUser(), !response.isEmpty {
+                    let userId = viewModel?.getUserId()
+                    let frindsTableVC = Configurator.configuratorFriendsTable(friends: response, userId: userId)
+                    navigationController?.pushViewController(frindsTableVC, animated: true)
+                }
             case IndexPath(row: 3, section: 0):
-                let userId = viewModel?.getFriendsResponse()?.userId
+                let userId = viewModel?.getUserId()
                 let photosVC = Configurator.configuratorPhotosGalleryProfile(userId: userId)
                 navigationController?.pushViewController(photosVC, animated: true)
             default:
@@ -179,8 +181,8 @@ extension PageProfileViewController: HeaderProfileCellDelegate {
 
 extension PageProfileViewController: BriefUserInfoViewCellDelegate {
     func showFollowersTable() {
-        let userId = viewModel?.getFriendsResponse()?.userId 
-        let followersTableVC = Configurator.conficuratorFollowerTable(userId: userId)
+        let userId = viewModel?.getUserId()
+        let followersTableVC = Configurator.configuratorFollowerTable(userId: userId)
         navigationController?.pushViewController(followersTableVC, animated: true)
     }
 }
@@ -192,6 +194,4 @@ extension PageProfileViewController: PhotosGalleryProfileViewCellDelegate {
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-    
-    
 }

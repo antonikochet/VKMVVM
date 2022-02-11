@@ -82,9 +82,12 @@
 		A5D4AB8D278EF5DB0045E333 /* DetailGalleryPhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D4AB8C278EF5DB0045E333 /* DetailGalleryPhotosViewModel.swift */; };
 		A5D4AB90278F01630045E333 /* DetailPhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D4AB8F278F01630045E333 /* DetailPhotoModel.swift */; };
 		A5E53B42277BA632005458F6 /* FeedCellCalculatorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E53B41277BA632005458F6 /* FeedCellCalculatorContentView.swift */; };
+		A5E578EB27B4780B006D2DC6 /* LikesBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E578EA27B4780B006D2DC6 /* LikesBottomView.swift */; };
 		A5E95AF4277CF70600454BEB /* WebImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E95AF3277CF70600454BEB /* WebImageView.swift */; };
 		A5EA901327AA8E3A00ACCA2A /* extension + UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EA901227AA8E3A00ACCA2A /* extension + UIView.swift */; };
 		A5EA901527AAA87C00ACCA2A /* RequestParamsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EA901427AAA87C00ACCA2A /* RequestParamsProtocol.swift */; };
+		A5F57D8C27B32A6600932C82 /* LikesRequestParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F57D8B27B32A6600932C82 /* LikesRequestParams.swift */; };
+		A5F57D8F27B32D0B00932C82 /* LikesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F57D8E27B32D0B00932C82 /* LikesResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -178,9 +181,12 @@
 		A5D4AB8C278EF5DB0045E333 /* DetailGalleryPhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGalleryPhotosViewModel.swift; sourceTree = "<group>"; };
 		A5D4AB8F278F01630045E333 /* DetailPhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPhotoModel.swift; sourceTree = "<group>"; };
 		A5E53B41277BA632005458F6 /* FeedCellCalculatorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCellCalculatorContentView.swift; sourceTree = "<group>"; };
+		A5E578EA27B4780B006D2DC6 /* LikesBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesBottomView.swift; sourceTree = "<group>"; };
 		A5E95AF3277CF70600454BEB /* WebImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageView.swift; sourceTree = "<group>"; };
 		A5EA901227AA8E3A00ACCA2A /* extension + UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extension + UIView.swift"; sourceTree = "<group>"; };
 		A5EA901427AAA87C00ACCA2A /* RequestParamsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestParamsProtocol.swift; sourceTree = "<group>"; };
+		A5F57D8B27B32A6600932C82 /* LikesRequestParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesRequestParams.swift; sourceTree = "<group>"; };
+		A5F57D8E27B32D0B00932C82 /* LikesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -331,6 +337,7 @@
 				A500B37E27988DB3005D749C /* FriendsRequestParams.swift */,
 				A57F2DDD279F13C800595864 /* PhotosRequestParams.swift */,
 				A554021527A4605200AED5F4 /* AlbumsRequestParams.swift */,
+				A5F57D8B27B32A6600932C82 /* LikesRequestParams.swift */,
 				A5EA901427AAA87C00ACCA2A /* RequestParamsProtocol.swift */,
 			);
 			path = RequestParams;
@@ -427,6 +434,7 @@
 			isa = PBXGroup;
 			children = (
 				A59D3F23277360D8007D1AA4 /* ElementBottomView.swift */,
+				A5E578EA27B4780B006D2DC6 /* LikesBottomView.swift */,
 			);
 			path = ElementBottomView;
 			sourceTree = "<group>";
@@ -524,6 +532,7 @@
 		A590839C2770DB080016F641 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A5F57D8D27B32CFE00932C82 /* Likes */,
 				A57F2DD8279F116300595864 /* Photos */,
 				A5C73177279CB0440029E080 /* Errors */,
 				A500B37B27988D53005D749C /* Friends */,
@@ -688,6 +697,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		A5F57D8D27B32CFE00932C82 /* Likes */ = {
+			isa = PBXGroup;
+			children = (
+				A5F57D8E27B32D0B00932C82 /* LikesResponse.swift */,
+			);
+			path = Likes;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -772,6 +789,7 @@
 				A59BF08E276A286C0004F343 /* NewsFeedViewModel.swift in Sources */,
 				A56C7C872768FA0600374BFC /* AppDelegate.swift in Sources */,
 				A524F2AC27A5EE3E0058F74A /* PhotoViewCell.swift in Sources */,
+				A5E578EB27B4780B006D2DC6 /* LikesBottomView.swift in Sources */,
 				A5EA901327AA8E3A00ACCA2A /* extension + UIView.swift in Sources */,
 				A57B333F2794884200F7F3FE /* DetailInfoButton.swift in Sources */,
 				A5737FC627711C66008B2432 /* NewsFeedViewCell.swift in Sources */,
@@ -787,6 +805,7 @@
 				A57F2DD7279ED83400595864 /* ClosedTableViewCell.swift in Sources */,
 				A500B37F27988DB3005D749C /* FriendsRequestParams.swift in Sources */,
 				A58A796D27A17BF700455FDA /* PhotosGalleryProfileViewCell.swift in Sources */,
+				A5F57D8F27B32D0B00932C82 /* LikesResponse.swift in Sources */,
 				A53A0B6F27723EDF00D6BE66 /* NewsFeedRequestParams.swift in Sources */,
 				A524F2A827A5878D0058F74A /* PhotosGalleryProfileModel.swift in Sources */,
 				A58953502786032A00162F40 /* RowLayout.swift in Sources */,
@@ -812,6 +831,7 @@
 				A554021627A4605200AED5F4 /* AlbumsRequestParams.swift in Sources */,
 				A5D3F3FA279B5980004B96B3 /* OnlineImageView.swift in Sources */,
 				A58A797227A1DC1400455FDA /* AlbumsResponse.swift in Sources */,
+				A5F57D8C27B32A6600932C82 /* LikesRequestParams.swift in Sources */,
 				A57B33422794AEAF00F7F3FE /* HeaderProfileTableViewCell.swift in Sources */,
 				A5167D8027A5626800B19B1F /* AlbumsViewCell.swift in Sources */,
 				A56A6B3427A0A16F00B485E1 /* extension + AlertViewController.swift in Sources */,

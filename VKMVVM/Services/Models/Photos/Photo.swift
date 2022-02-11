@@ -8,10 +8,12 @@
 import Foundation
 
 struct Photo: Decodable {
+    let id: Int
+    let ownerId: Int
     let sizes: [PhotoSize]
     let date: Int
     let albumId: Int
-    let likes: CountableItem?
+    let likes: LikesItem?
     let comments: CountableItem?
     let reposts: CountableItem?
     let realOffset: Int?
@@ -39,7 +41,8 @@ struct Photo: Decodable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case sizes, date, likes, comments, reposts
+        case sizes, date, likes, comments, reposts, id
+        case ownerId = "owner_id"
         case albumId = "album_id"
         case realOffset = "real_offset"
     }

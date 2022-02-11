@@ -8,8 +8,13 @@
 import Foundation
 
 struct DetailPhotoModel: DetailPhotoViewModelType {
+    var id: Int
+    var ownerId: Int
+    
     var photoUrlString: String?
     var likes: String
+    var isLiked: Bool
+    var isChangedLike: Bool
     var comments: String
     var reposts: String
 }

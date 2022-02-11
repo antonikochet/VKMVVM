@@ -10,6 +10,8 @@ import UIKit
 protocol DetailPhotoViewModelType {
     var photoUrlString: String? { get }
     var likes: String { get }
+    var isLiked: Bool { get }
+    var isChangedLike: Bool { get }
     var comments: String { get }
     var reposts: String { get }
 }

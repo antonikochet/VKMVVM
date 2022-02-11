@@ -9,7 +9,7 @@ import UIKit
 
 class DetailGalleryPhotosViewController: UIPageViewController {
     
-    private var viewModel: DetailGalleryPhotosViewModelType!
+    var viewModel: DetailGalleryPhotosViewModelType!
     
     //MARK: - TopView - NavigationBar
     private let topView: UIView = {
@@ -48,8 +48,9 @@ class DetailGalleryPhotosViewController: UIPageViewController {
         return stack
     }()
     
-    private let likes: ElementBottomView = {
-        let element = ElementBottomView(nameImage: .like, centerPositionSubviewsFlag: true)
+    private let likes: LikesBottomView = {
+        let element = LikesBottomView(centerPositionSubviewsFlag: true)
+        element.addTarget(self, action: #selector(touchLikeButtom), for: .touchUpInside)
         return element
     }()
     
@@ -68,8 +69,7 @@ class DetailGalleryPhotosViewController: UIPageViewController {
     private var beginIndex: Int
     
     //MARK: - Init
-    init(viewModel: DetailGalleryPhotosViewModelType, beginIndex: Int) {
-        self.viewModel = viewModel
+    init(beginIndex: Int) {
         self.beginIndex = beginIndex
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         dataSource = self
@@ -151,10 +151,10 @@ class DetailGalleryPhotosViewController: UIPageViewController {
     
     private func set(at index: Int) {
         titleTopViewLabel.text = viewModel.getCurrectTitle(at: index)
-        let photo = viewModel.getPhoto(at: index)
-        likes.set(text: photo?.likes)
-        reposts.set(text: photo?.reposts)
-        comments.set(text: photo?.comments)
+        guard let photo = viewModel.getPhoto(at: index) else { return }
+        likes.set(text: photo.likes, isLiked: photo.isLiked, isChangedLike: photo.isChangedLike)
+        reposts.set(text: photo.reposts)
+        comments.set(text: photo.comments)
     }
     
     //MARK: - helper methods
@@ -198,6 +198,11 @@ class DetailGalleryPhotosViewController: UIPageViewController {
     @objc private func touchBackButton() {
         navigationController?.popViewController(animated: true)
     }
+    
+    @objc private func touchLikeButtom() {
+        guard let index = (viewControllers?.first as? DetailPhotoViewController)?.pageNumber else { return }
+        viewModel.changedLike(at: index)
+    }
 }
 
 extension DetailGalleryPhotosViewController: UIPageViewControllerDataSource {
@@ -223,4 +228,23 @@ extension DetailGalleryPhotosViewController: UIPageViewControllerDelegate {
             set(at: index)
         }
     }
+}
+
+extension DetailGalleryPhotosViewController: DetailGalleryPhotosViewModelDelegate {
+    func changeLike(viewModel: DetailPhotoViewModelType, index: Int) {
+        DispatchQueue.main.async {
+            guard let viewController = self.viewControllers?.first as? DetailPhotoViewController,
+                  viewController.pageNumber == index else { return }
+            self.likes.set(text: viewModel.likes,
+                      isLiked: viewModel.isLiked,
+                      isChangedLike: viewModel.isChangedLike)
+        }
+        
+    }
+    
+    func showError(_ error: Error) {
+        print(error)
+    }
+    
+    
 }

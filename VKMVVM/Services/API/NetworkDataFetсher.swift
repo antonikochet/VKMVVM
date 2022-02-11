@@ -18,6 +18,7 @@ protocol DataFetcher {
     func getFollowers(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<FriendsResponseWrapper>)
     func getAllPhotos(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>)
     func getAlbums(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<AlbumResponseWrapper>)
+    func handlingLike(type: LikesTypeMethod, parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<LikesResponseWrapper>)
 }
 
 struct NetworkDataFetcher: DataFetcher {
@@ -42,12 +43,16 @@ struct NetworkDataFetcher: DataFetcher {
     }
     
     func getAllPhotos(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<PhotosResponseWrapper>) {
-        
         makeRequest(path: .getAllPhotos, params: parametrs.generateParametrsForRequest(), response: PhotosResponseWrapper.self, completion: completion)
     }
     
     func getAlbums(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<AlbumResponseWrapper>) {
         makeRequest(path: .getAlbums, params: parametrs.generateParametrsForRequest(), response: AlbumResponseWrapper.self, completion: completion)
+    }
+    
+    func handlingLike(type: LikesTypeMethod, parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<LikesResponseWrapper>) {
+        let method: APIMethods = type == .add ? .addLike : .deleteLike
+        makeRequest(path: method, params: parametrs.generateParametrsForRequest(), response: LikesResponseWrapper.self, completion: completion)
     }
     
     //MARK: - private method for universal make request for all methods API

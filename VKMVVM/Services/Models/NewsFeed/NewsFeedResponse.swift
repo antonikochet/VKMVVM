@@ -25,11 +25,11 @@ struct NewsFeedResponse: Decodable {
 
 struct NewsFeedItem: Decodable {
     let sourceId: Int
-    let postId: Int
+    var postId: Int
     let text: String?
     let date: Double
     let comments: CountableItem?
-    let likes: CountableItem?
+    var likes: LikesItem?
     let reposts: CountableItem?
     let views: CountableItem?
     let attachments: [Attechment]?
@@ -47,6 +47,20 @@ struct Attechment: Decodable {
 
 struct CountableItem: Decodable {
     let count: Int
+}
+
+struct LikesItem: Decodable {
+    let count: Int
+    let userLikes: Int
+    
+    var isLiked: Bool {
+        return userLikes == 1
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case count
+        case userLikes = "user_likes"
+    }
 }
 
 protocol ProfileRepresenatable {

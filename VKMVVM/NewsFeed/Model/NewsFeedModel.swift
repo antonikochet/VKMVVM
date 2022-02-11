@@ -9,9 +9,12 @@ import Foundation
 
 struct NewsFeedModel: NewsFeedModelItemType {
     var postId: Int
+    var ownerId: Int
     
     var topModelView: TopRecordingModelViewType
     var likes: String?
+    var isLiked: Bool
+    var isChangedLike: Bool
     var comments: String?
     var shares: String?
     var views: String?

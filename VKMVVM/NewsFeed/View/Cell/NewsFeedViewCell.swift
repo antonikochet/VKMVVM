@@ -10,6 +10,8 @@ import UIKit
 protocol NewsFeedModelItemType {
     var topModelView: TopRecordingModelViewType { get }
     var likes: String? { get }
+    var isLiked: Bool { get }
+    var isChangedLike: Bool { get }
     var comments: String? { get }
     var shares: String? { get }
     var views: String? { get }
@@ -25,6 +27,7 @@ protocol NewsFeedCellPhotoAttachementViewModelType {
 protocol NewsFeedCellDelegate: AnyObject {
     func revealPost(for cell: NewsFeedViewCell)
     func showDetailGalleryPhotos(for cell: NewsFeedViewCell)
+    func touchLikeNewsFeedPost(for cell: NewsFeedViewCell)
 }
 
 class NewsFeedViewCell: UITableViewCell {
@@ -41,8 +44,9 @@ class NewsFeedViewCell: UITableViewCell {
     }()
     
     //MARK: - bottomView
-    private let likesView: ElementBottomView = {
-        let view = ElementBottomView(nameImage: .like)
+    private let likesView: LikesBottomView = {
+        let view = LikesBottomView()
+        view.addTarget(self, action: #selector(touchLikeButton), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -121,7 +125,7 @@ class NewsFeedViewCell: UITableViewCell {
     
     func set(_ viewModel: NewsFeedModelItemType) {
         topView.set(modelView: viewModel.topModelView)
-        likesView.set(text: viewModel.likes)
+        likesView.set(text: viewModel.likes, isLiked: viewModel.isLiked, isChangedLike: viewModel.isChangedLike)
         commentsView.set(text: viewModel.comments)
         repostsView.set(text: viewModel.shares)
         viewsView.set(text: viewModel.views)
@@ -164,5 +168,9 @@ class NewsFeedViewCell: UITableViewCell {
     
     @objc func showDetailGalleryPhotos() {
         delegate?.showDetailGalleryPhotos(for: self)
+    }
+    
+    @objc func touchLikeButton() {
+        delegate?.touchLikeNewsFeedPost(for: self)
     }
 }

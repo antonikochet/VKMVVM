@@ -15,11 +15,13 @@ protocol NewsFeedViewModelType {
     func getNextBatchNews()
     func revealPost(_ id: Int)
     func getPhotosFromItems(by index: Int) -> [Photo]
+    func changedLikePost(by index: Int)
 }
 
 protocol NewsFeedViewModelDelegate: AnyObject {
     func willLoadData()
     func didLoadData()
+    func changeLike(viewModel: NewsFeedModelItemType, index: Int)
     func showError(_ error: Error)
 }
 
@@ -56,6 +58,30 @@ class NewsFeedViewModel {
                     self.updateResponseData(response.response)
                     self.viewData()
                     self.delegate?.didLoadData()
+                case .failure(let error):
+                    self.delegate?.showError(error)
+            }
+        }
+    }
+    
+    private func changeLikePost(ownerId: Int, itemId: Int, isLiked: Bool) {
+        let request = LikesRequestParams(type: .post,
+                                         ownerId: ownerId,
+                                         itemId: itemId)
+        let typeMethod: LikesTypeMethod = isLiked ? .delete : .add
+        dataFetcher.handlingLike(type: typeMethod ,parametrs: request) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .success(let responseWrapper):
+                    let indexCell = self.cells.firstIndex(where: { ($0 as! NewsFeedModel).postId == itemId })
+                    if let indexCell = indexCell {
+                        var viewModel = self.cells[indexCell] as! NewsFeedModel
+                        viewModel.likes = String(responseWrapper.response.likes)
+                        viewModel.isLiked = !viewModel.isLiked
+                        self.cells[indexCell] = viewModel
+                        viewModel.isChangedLike = true
+                        self.delegate?.changeLike(viewModel: viewModel, index: indexCell)
+                    }
                 case .failure(let error):
                     self.delegate?.showError(error)
             }
@@ -118,8 +144,11 @@ class NewsFeedViewModel {
         let contentPost = NewsFeedContentPostModel(text: item.text, photos: postPhotos, sizes: sizeContent)
         
         return NewsFeedModel(postId: item.postId,
+                             ownerId: item.sourceId,
                              topModelView: topModelView,
                              likes: formatterCounter(item.likes?.count),
+                             isLiked: item.likes?.isLiked ?? false,
+                             isChangedLike: false,
                              comments: formatterCounter(item.comments?.count),
                              shares: formatterCounter(item.reposts?.count),
                              views: formatterCounter(item.views?.count),
@@ -191,5 +220,13 @@ extension NewsFeedViewModel: NewsFeedViewModelType {
               let item = responseData?.items.first(where: { return $0.postId == cell.postId }),
               let photos = item.attachments?.compactMap({ return $0.photo }) else { return [] }
         return photos
+    }
+    
+    func changedLikePost(by index: Int) {
+        guard let cell = cells[index] as? NewsFeedModel else { return }
+        let isLiked = cell.isLiked
+        let ownerId = cell.ownerId
+        let itemId = cell.postId
+        changeLikePost(ownerId: ownerId, itemId: itemId, isLiked: isLiked)
     }
 }

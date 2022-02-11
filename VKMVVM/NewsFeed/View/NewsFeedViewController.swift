@@ -98,6 +98,13 @@ extension NewsFeedViewController: NewsFeedViewModelDelegate {
         }
     }
     
+    func changeLike(viewModel: NewsFeedModelItemType, index: Int) {
+        DispatchQueue.main.async {
+            let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as! NewsFeedViewCell
+            cell.set(viewModel)
+        }
+    }
+    
     func showError(_ error: Error) {
         print(error)
     }
@@ -114,9 +121,13 @@ extension NewsFeedViewController: NewsFeedCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photos = viewModel.getPhotosFromItems(by: indexPath.row)
         
-        let galleryModelView = DetailGalleryPhotosModelView(photos)
-        let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: 0) //TODO: добавить опредление индекса нажатой фотографии
-
+        let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: 0) //TODO: добавить опредление индекса нажатой фотографии
+        
         navigationController?.pushViewController(galleryVC, animated: true)
+    }
+    
+    func touchLikeNewsFeedPost(for cell: NewsFeedViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        viewModel.changedLikePost(by: indexPath.row)
     }
 }

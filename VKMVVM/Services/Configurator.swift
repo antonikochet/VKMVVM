@@ -24,8 +24,8 @@ class Configurator {
         return pageProfileVC
     }
     
-    static func configuratorFriendsTable(friends: FriendsResponse?) -> FriendsTableTableViewController {
-        let friendsViewModel = FriendsTableViewModel(friends)
+    static func configuratorFriendsTable(friends: [UserResponse], userId: String?) -> FriendsTableTableViewController {
+        let friendsViewModel = FriendsTableViewModel(friends, userId: userId)
         let friendsVC = FriendsTableTableViewController()
         friendsVC.viewModel = friendsViewModel
         friendsViewModel.delegate = friendsVC
@@ -34,11 +34,13 @@ class Configurator {
     
     static func configuratorGalleryPhotos(photos: [Photo], beginIndexPhoto: Int) -> DetailGalleryPhotosViewController {
         let galleryModelView = DetailGalleryPhotosModelView(photos)
-        let galleryVC = DetailGalleryPhotosViewController(viewModel: galleryModelView, beginIndex: beginIndexPhoto)
+        let galleryVC = DetailGalleryPhotosViewController(beginIndex: beginIndexPhoto)
+        galleryVC.viewModel = galleryModelView
+        galleryModelView.delegate = galleryVC
         return galleryVC
     }
     
-    static func conficuratorFollowerTable(userId: String?) -> FollowerTableViewController {
+    static func configuratorFollowerTable(userId: String?) -> FollowerTableViewController {
         let followersViewModel = FollowerTableViewModel(userId: userId)
         let followersVC = FollowerTableViewController()
         followersVC.viewModel = followersViewModel
@@ -46,7 +48,7 @@ class Configurator {
         return followersVC
     }
     
-    static func conficuratorMainTabBar(viewControllers: [UIViewController]) -> UITabBarController {
+    static func configuratorMainTabBar(viewControllers: [UIViewController]) -> UITabBarController {
         let tabBarVC = UITabBarController()
         tabBarVC.setViewControllers(viewControllers, animated: true)
         tabBarVC.tabBar.tintColor = UIColor(named: "ColorVK")!
@@ -63,7 +65,7 @@ class Configurator {
         navBarNewsFeedVC.configuratorTabBarItem(title: "Новости", image: .newsFeed, tag: 0)
         navBarPageProfileVC.configuratorTabBarItem(title: "Страница", image: .profile, tag: 1)
         
-        let tabBarVC = Configurator.conficuratorMainTabBar(viewControllers: [navBarNewsFeedVC, navBarPageProfileVC])
+        let tabBarVC = Configurator.configuratorMainTabBar(viewControllers: [navBarNewsFeedVC, navBarPageProfileVC])
         return tabBarVC
     }
     
@@ -77,12 +79,12 @@ class Configurator {
 }
 
 extension UIViewController {
-    enum NameImageTabBarItem: String {
+    fileprivate enum NameImageTabBarItem: String {
         case profile = "person.crop.circle"
         case newsFeed = "newspaper.fill"
     }
     
-    func configuratorTabBarItem(title: String, image: NameImageTabBarItem, tag: Int) {
+    fileprivate func configuratorTabBarItem(title: String, image: NameImageTabBarItem, tag: Int) {
         tabBarItem.title = title
         tabBarItem.image = UIImage(systemName: image.rawValue)?.withRenderingMode(.alwaysTemplate)
         tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 16)], for: .normal)

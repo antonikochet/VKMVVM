@@ -13,10 +13,11 @@ protocol PageProfileViewModelType {
     func getHeaderProfile() -> HeaderProfileCellViewModelType?
     func getBriefUserInfo() -> BriefUserInfoViewModelType?
     func getFriendsList() -> FriendsListViewModelType?
-    func getFriendsResponse() -> FriendsResponse?
+    func getFriendsUser() -> [UserResponse]
     func getGalleryPhotos() -> PhotoListViewModelType?
     func showDetailGalleryPhotos() -> [Photo]
-    var isClosed: Bool { get }
+    func getUserId() -> String?
+    var isClosed: Bool? { get }
     var isDeleted: Bool { get }
     var nickName: String { get }
     var isProfileSpecificUser: Bool { get }
@@ -32,14 +33,20 @@ protocol PageProfileViewModelDelegate: AnyObject {
 class PageProfileViewModel {
     weak var delegate: PageProfileViewModelDelegate?
     
-    private var response: UserResponse?
-    private var friendsResponse: FriendsResponse?
-    private var photosUserResponse: PhotosResponse?
     private var dataFetcher: DataFetcher
+    private var dispatchGroup = DispatchGroup()
     
     private var userId: String?
-    private var isClosePage: Bool = true
+    private var screenName: String?
+    private var isClosePage: Bool?
     private var isDeactivated: Bool = false
+    
+    private var headerModel: HeaderProfileCellModel?
+    private var briefUserInfoModel: BriefUserInfoViewModelType?
+    private var friendsModel: FriendsListViewModelType?
+    private var friendsUserResponse: [UserResponse] = []
+    private var userPhotosModel: PhotoListViewModelType?
+    private var photosUser: [Photo] = []
     
     private var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -53,24 +60,28 @@ class PageProfileViewModel {
         self.dataFetcher = dataFetcher
     }
     
+    //MARK: - methods for get data from API
     private func getProfileInformation() {
         let fieldsParams = UserRequestFieldsParams.allCases
         let request = UserRequestParams(userIds: userId,
                                         fields: fieldsParams)
+        dispatchGroup.enter()
         dataFetcher.getProfileInfo(parametrs: request) { [weak self] result in
             guard let self = self else { return }
             switch result {
-                case .success(let response):
-                    self.response = response.response.first
-                    if let response = self.response {
+                case .success(let responseWrapper):
+                    let response = responseWrapper.response.first
+                    if let response = response {
                         self.isClosePage = !response.canAccessClosed
                         self.isDeactivated = response.deactivated != nil
+                        self.screenName = response.screenName
+                        self.formatterProfileInfo(user: response)
+                        self.formatterBriefUserInfo(user: response)
                     }
-
-                    self.delegate?.didLoadData()
                 case .failure(let error):
                     self.delegate?.showError(error: error)
             }
+            self.dispatchGroup.leave()
         }
     }
     
@@ -80,20 +91,23 @@ class PageProfileViewModel {
                                            count: nil,
                                            offset: nil,
                                            fields: [.photo100, .online, .city])
+        dispatchGroup.enter()
         dataFetcher.getFriends(parametrs: request) {  [weak self] result in
             guard let self = self else { return }
             switch result {
-                case .success(let response):
-                    self.friendsResponse = response.response
-                    self.friendsResponse?.userId = self.userId
-                    self.delegate?.didLoadData()
+                case .success(let responseWrapper):
+                    self.formatterFriends(friends: responseWrapper.response)
                 case .failure(let error):
                     if let deletedError = error as? ErrorResponse {
-                        guard deletedError.errorCode != 18, deletedError.errorCode != 30 else { return }
+                        guard deletedError.errorCode != 18, deletedError.errorCode != 30 else {
+                            self.dispatchGroup.leave()
+                            return
+                        }
                         self.delegate?.showError(error: error)
                     }
                     self.delegate?.showError(error: error)
             }
+            self.dispatchGroup.leave()
         }
     }
     
@@ -120,27 +134,82 @@ class PageProfileViewModel {
                                                       count: 20,
                                                       extended: true,
                                                       skipHidden: false)
+        dispatchGroup.enter()
         dataFetcher.getAllPhotos(parametrs: requestParams) { [weak self] result in
             guard let self = self else { return }
             switch result {
-                case .success(let response):
-                    self.photosUserResponse = response.response
+                case .success(let responseWrapper):
+                    self.formatterUserPhotos(photosResponse: responseWrapper.response)
                     self.delegate?.didLoadData()
                 case .failure(let error):
+                    if let deletedError = error as? ErrorResponse {
+                        guard deletedError.errorCode != 18, deletedError.errorCode != 30 else {
+                            self.dispatchGroup.leave()
+                            return
+                        }
+                        self.delegate?.showError(error: error)
+                    }
                     self.delegate?.showError(error: error)
             }
+            self.dispatchGroup.leave()
         }
     }
     
-    private func formatterOnlineStatus(user: UserResponse?) -> String {
-        if user?.isOnline ?? false {
+    //MARK: - data preparation methods
+    private func formatterProfileInfo(user: UserResponse) {
+        let fullName = user.firstName + " " + user.lastName
+        headerModel = HeaderProfileCellModel(iconUrl: user.photoUrl,
+                                                   fullName: fullName,
+                                                   userStatus: user.status ?? "",
+                                                   onlineStatus: formatterOnlineStatus(user: user))
+    }
+    
+    private func formatterBriefUserInfo(user: UserResponse) {
+        let followes = user.followersCount != nil ? String(user.followersCount!) : ""
+        briefUserInfoModel = BriefUserInfoCellModel(city: user.HomeTown,
+                                                   education: user.universityName,
+                                                   work: nil,
+                                                   followes: followes)
+    }
+    
+    private func formatterFriends(friends: FriendsResponse) {
+        let friendsList = friends.items.map { user in
+            return FriendCellViewModel(id: user.id,
+                                       iconUrl: user.photoUrl,
+                                       firstName: user.firstName,
+                                       lastName: user.lastName,
+                                       isOnline: user.isOnline,
+                                       isOnlineMobile: user.isOnlineMobile)
+        }
+        friendsUserResponse = friends.items
+        friendsModel = FriendsList(countFriends: friends.count, friendsList: friendsList)
+    }
+    
+    private func formatterUserPhotos(photosResponse: PhotosResponse) {
+        let photosModel = photosResponse.items.map { photo in
+            DetailPhotoModel(id: photo.id,
+                             ownerId: photo.ownerId,
+                             photoUrlString: photo.srcBIG,
+                             likes: photo.likes?.count.description ?? "",
+                             isLiked: photo.likes?.isLiked ?? false,
+                             isChangedLike: false,
+                             comments: photo.comments?.count.description ?? "",
+                             reposts: photo.reposts?.count.description ?? "")}
+        
+        photosUser = photosResponse.items
+        userPhotosModel = PhotoList(countPhoto: String(photosUser.count),
+                                  photoList: photosModel)
+    }
+    
+    private func formatterOnlineStatus(user: UserResponse) -> String {
+        if user.isOnline {
             return "online"
-        } else if let lastSeen = user?.lastSeen {
+        } else if let lastSeen = user.lastSeen {
             let date = Date(timeIntervalSince1970: TimeInterval(lastSeen.time))
             let nowDate = Date()
             let dateInterval = DateInterval(start: date, end: nowDate)
             let minutes = Int(dateInterval.duration) / 60
-            let sexBeginString = user?.sex == 1 ? "была " : "был "
+            let sexBeginString = user.sex == 1 ? "была " : "был "
             var endString: String
             switch minutes {
                 case 1: endString = "1 минуту назад"
@@ -160,72 +229,48 @@ class PageProfileViewModel {
 
 extension PageProfileViewModel: PageProfileViewModelType {
     func getHeaderProfile() -> HeaderProfileCellViewModelType? {
-        guard let response = response else { return nil }
-        let fullName = response.firstName + " " + response.lastName
-        let headerProfile = HeaderProfileCellModel(iconUrl: response.photoUrl,
-                                                   fullName: fullName,
-                                                   userStatus: response.status ?? "",
-                                                   onlineStatus: formatterOnlineStatus(user: response))
-        return headerProfile
+        return headerModel
     }
     
     func getBriefUserInfo() -> BriefUserInfoViewModelType? {
-        guard let response = response else { return nil }
-        let followes = response.followersCount != nil ? String(response.followersCount!) : ""
-        let briefUserInfo = BriefUserInfoCellModel(city: response.HomeTown,
-                                                   education: response.universityName,
-                                                   work: nil,
-                                                   followes: followes)
-        return briefUserInfo
+        return briefUserInfoModel
     }
     
     func getFriendsList() -> FriendsListViewModelType? {
-        guard let response = friendsResponse else { return nil }
-        let friendsList = response.items.map { user in
-            return FriendCellViewModel(id: user.id,
-                                       iconUrl: user.photoUrl,
-                                       firstName: user.firstName,
-                                       lastName: user.lastName,
-                                       isOnline: user.isOnline,
-                                       isOnlineMobile: user.isOnlineMobile)
-        }
-        let friendsListViewModel = FriendsList(countFriends: response.count, friendsList: friendsList)
-        return friendsListViewModel
+        return friendsModel
     }
     
-    func getFriendsResponse() -> FriendsResponse? {
-        return friendsResponse
+    func getFriendsUser() -> [UserResponse] {
+        return friendsUserResponse
     }
     
     func getGalleryPhotos() -> PhotoListViewModelType? {
-        guard photosUserResponse?.count != 0 else { return nil }
-        let photos = photosUserResponse?.items.map { photo in
-            return DetailPhotoModel(photoUrlString: photo.srcBIG,
-                                    likes: photo.likes?.count.description ?? "",
-                                    comments: photo.comments?.count.description ?? "",
-                                    reposts: photo.reposts?.count.description ?? "")} ?? []
-        
-        let photoList = PhotoList(countPhoto: photosUserResponse?.count.description ?? "",
-                                  photoList: photos)
-        
-        return photoList
+        guard userPhotosModel?.photoList.count != 0 else { return nil }
+        return userPhotosModel
     }
     
     func showDetailGalleryPhotos() -> [Photo] {
-        return photosUserResponse?.items ?? []
+        return photosUser
     }
     
     func loadProfileInfo() {
         self.getProfileInformation()
         self.getFriends()
         self.getFullPhotosUser()
+        dispatchGroup.notify(queue: .main) {
+            self.delegate?.didLoadData()
+        }
     }
     
     func loadPhotosProfileInfo() {
         getMainPhotosProfile()
     }
     
-    var isClosed: Bool {
+    func getUserId() -> String? {
+        return userId
+    }
+    
+    var isClosed: Bool? {
         return isClosePage
     }
     
@@ -234,7 +279,7 @@ extension PageProfileViewModel: PageProfileViewModelType {
     }
     
     var nickName: String {
-        return response?.screenName ?? ""
+        return screenName ?? ""
     }
     
     var isProfileSpecificUser: Bool {
@@ -242,6 +287,6 @@ extension PageProfileViewModel: PageProfileViewModelType {
     }
     
     var isEmptyPhotos: Bool {
-        return (photosUserResponse?.count ?? 0) == 0 
+        return (userPhotosModel?.photoList.count ?? 0) == 0
     }
 }

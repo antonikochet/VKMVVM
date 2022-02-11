@@ -21,20 +21,19 @@ protocol FriendsTableViewModelType{
 class FriendsTableViewModel {
     weak var delegate: FriendsTableViewModelDelegate?
     
-    private var friendsResponse: FriendsResponse
+    private var dataFetcher: DataFetcher
+    
     private var friendsCells: [FriendTableCellViewModelType] = []
-    private var dataFetcher: DataFetcher?
     private var userId: String?
     
-    init(_ friends: FriendsResponse?, dataFetcher: DataFetcher = NetworkDataFetcher()) {
+    init(_ friendsUser: [UserResponse]?, userId: String?, dataFetcher: DataFetcher = NetworkDataFetcher()) {
         self.dataFetcher = dataFetcher
-        userId = friends?.userId
-        if let friends = friends {
-            friendsResponse = friends
+        self.userId = userId
+        if let friendsUser = friendsUser, !friendsUser.isEmpty {
+            viewData(friendsUser: friendsUser)
         } else {
-            friendsResponse = FriendsResponse(count: 0, items: [], userId: nil)
+            getFriends()
         }
-        viewData()
     }
     
     private func getFriends() {
@@ -44,10 +43,11 @@ class FriendsTableViewModel {
                                            offset: nil,
                                            fields: [.city, .online, .photo100])
         
-        dataFetcher?.getFriends(parametrs: request) { result in
+        dataFetcher.getFriends(parametrs: request) { [weak self] result in
+            guard let self = self else { return }
             switch result {
                 case .success(let response):
-                    self.friendsResponse = response.response
+                    self.viewData(friendsUser: response.response.items)
                 case .failure(let error):
                     if let deletedError = error as? ErrorResponse {
                         guard deletedError.errorCode != 30 else { return }
@@ -58,11 +58,11 @@ class FriendsTableViewModel {
         }
     }
     
-    private func viewData() {
-        friendsCells = friendsResponse.items.map { user in
+    private func viewData(friendsUser: [UserResponse]) {
+        friendsCells = friendsUser.map { user in
             let fullName = user.firstName + " " + user.lastName
             let extraData: String? = gettingExtraData(user: user)
-             
+                 
             return FriendTableCellModel(id: user.id,
                                         iconUrl: user.photoUrl,
                                         fullName: fullName,
@@ -95,6 +95,5 @@ extension FriendsTableViewModel: FriendsTableViewModelType {
     
     func refreshFriends() {
         getFriends()
-        viewData()
     }
 }

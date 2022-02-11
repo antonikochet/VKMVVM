@@ -21,6 +21,8 @@ enum APIMethods: String {
     case getFollowers = "users.getFollowers"
     case getAllPhotos = "photos.getAll"
     case getAlbums = "photos.getAlbums"
+    case addLike = "likes.add"
+    case deleteLike = "likes.delete"
     
     var path: String {
         return "/method/" + self.rawValue
