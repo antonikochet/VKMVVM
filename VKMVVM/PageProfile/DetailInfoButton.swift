@@ -12,6 +12,8 @@ enum ContentDetailInfoView: String {
     case followers = "dot.radiowaves.up.forward"
     case education = "graduationcap"
     case work = "case"
+    case birthday = "birthday"
+    case familyStatus = "heart"
     case information = "exclamationmark.circle.fill"
     
     var beginText: String {
@@ -25,6 +27,10 @@ enum ContentDetailInfoView: String {
                 text = "Образование"
             case .work:
                 text = "Работа"
+            case .birthday:
+                text = "День рождения"
+            case .familyStatus:
+                return ""
             case .information:
                 return "Подробная инофрмация"
         }
@@ -74,7 +80,10 @@ class DetailInfoButton: UIControl {
     }
     
     func set(text: String?) {
-        let image = UIImage(systemName: typeItem.rawValue)?.withRenderingMode(.alwaysTemplate)
+        var image = UIImage(systemName: typeItem.rawValue)?.withRenderingMode(.alwaysTemplate)
+        if typeItem == .birthday {
+            image = UIImage(named: typeItem.rawValue)?.withRenderingMode(.alwaysTemplate)
+        }
         imageView.image = image
         titleLabel.text = typeItem.beginText + (text ?? "")
     }

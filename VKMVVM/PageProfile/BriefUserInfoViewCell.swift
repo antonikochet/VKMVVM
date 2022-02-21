@@ -16,6 +16,7 @@ protocol BriefUserInfoViewModelType {
 
 protocol BriefUserInfoViewCellDelegate: AnyObject {
     func showFollowersTable()
+    func showDetailInfoUser()
 }
 
 class BriefUserInfoViewCell: UITableViewCell {
@@ -56,7 +57,7 @@ class BriefUserInfoViewCell: UITableViewCell {
         stack.addArrangedSubview(detailModelViewButton)
         
         followesView.addTarget(self, action: #selector(touchFollowersButton), for: .touchUpInside)
-        
+        detailModelViewButton.addTarget(self, action: #selector(touchDetailInfoButton), for: .touchUpInside)
         stack.fillSuperview(padding: StaticSizesPageProfileCell.paddingBriefUserStack)
     }
     
@@ -83,6 +84,10 @@ class BriefUserInfoViewCell: UITableViewCell {
     
     @objc private func touchFollowersButton() {
         delegate?.showFollowersTable()
+    }
+    
+    @objc private func touchDetailInfoButton() {
+        delegate?.showDetailInfoUser()
     }
 }
 

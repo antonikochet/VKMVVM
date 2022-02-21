@@ -32,6 +32,7 @@ struct UserResponse: Decodable {
     let onlineMobile: Int?
     let lastSeen: LastSeen?
     let city: City?
+    let relation: RelationUser?
     
     var isOnline: Bool {
         return online == 1
@@ -57,7 +58,7 @@ struct UserResponse: Decodable {
         case canAccessClosed = "can_access_closed"
         
         //MARK: - option property coding keys
-        case sex, status, online, city
+        case sex, status, online, city, relation
         case screenName = "screen_name"
         case birthdayData = "bdate"
         case HomeTown = "home_town"
@@ -77,6 +78,32 @@ struct LastSeen: Decodable {
 struct City: Decodable {
     let id: Int
     let title: String
+}
+
+enum RelationUser: Int, Decodable {
+    case none = 0
+    case notMarried = 1
+    case haveFriend = 2
+    case engaged = 3
+    case married = 4
+    case difficult = 5
+    case activelySearching = 6
+    case love = 7
+    case inCivinMarriage = 8
+    
+    func getStatus(sex: Int?) -> String? {
+        switch self {
+            case .notMarried: return sex == 1 ? "не замужем" : sex == 2 ? "не женат" : ""
+            case .haveFriend: return sex == 1 ? "есть друг" : sex == 2 ? "есть подруга" : ""
+            case .engaged: return sex == 1 ? "помолвлена" : sex == 2 ? "помолвлен" : ""
+            case .married: return sex == 1 ? "замужем" : sex == 2 ? "женат" : ""
+            case .difficult: return "всё сложно"
+            case .activelySearching: return "в активном поиске"
+            case .love: return sex == 1 ? "влюблена" : sex == 2 ? "влюблён" : ""
+            case .inCivinMarriage: return "в гражданском браке"
+            case .none: return nil
+        }
+    }
 }
 
 @propertyWrapper

@@ -16,6 +16,7 @@ protocol PageProfileViewModelType {
     func getFriendsUser() -> [UserResponse]
     func getGalleryPhotos() -> PhotoListViewModelType?
     func showDetailGalleryPhotos() -> [Photo]
+    func getUserResponseForDetailInfoProfile() -> UserResponse?
     func getUserId() -> String?
     var isClosed: Bool? { get }
     var isDeleted: Bool { get }
@@ -47,6 +48,7 @@ class PageProfileViewModel {
     private var friendsUserResponse: [UserResponse] = []
     private var userPhotosModel: PhotoListViewModelType?
     private var photosUser: [Photo] = []
+    private var userResponse: UserResponse?
     
     private var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -75,6 +77,7 @@ class PageProfileViewModel {
                         self.isClosePage = !response.canAccessClosed
                         self.isDeactivated = response.deactivated != nil
                         self.screenName = response.screenName
+                        self.userResponse = response
                         self.formatterProfileInfo(user: response)
                         self.formatterBriefUserInfo(user: response)
                     }
@@ -251,6 +254,10 @@ extension PageProfileViewModel: PageProfileViewModelType {
     
     func showDetailGalleryPhotos() -> [Photo] {
         return photosUser
+    }
+
+    func getUserResponseForDetailInfoProfile() -> UserResponse? {
+        return userResponse
     }
     
     func loadProfileInfo() {

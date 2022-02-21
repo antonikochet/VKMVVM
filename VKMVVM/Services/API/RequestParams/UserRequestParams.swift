@@ -58,7 +58,7 @@ enum UserRequestFieldsParams: String, CaseIterable {
     case photo100 = "photo_100"
     case followersCount = "followers_count"
     case lastSeen = "last_seen"
-    case sex, education, online
+    case sex, education, online, status, relation
     
     static func params(_ array: [Self]) -> String {
         return array.map { $0.rawValue }.joined(separator: ",")

@@ -76,6 +76,13 @@ class Configurator {
         vc.viewModel = viewModel
         return vc
     }
+    
+    static func configuratorDetailInfoProfile(user: UserResponse) -> DetailInfoProfileViewController {
+        let viewModel = DetailInfoProfileViewModel(user)
+        let VC = DetailInfoProfileViewController()
+        VC.viewModel = viewModel
+        return VC
+    }
 }
 
 extension UIViewController {

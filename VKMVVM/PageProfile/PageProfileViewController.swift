@@ -185,6 +185,12 @@ extension PageProfileViewController: BriefUserInfoViewCellDelegate {
         let followersTableVC = Configurator.configuratorFollowerTable(userId: userId)
         navigationController?.pushViewController(followersTableVC, animated: true)
     }
+    
+    func showDetailInfoUser() {
+        guard let user = viewModel?.getUserResponseForDetailInfoProfile() else { return }
+        let detailInfoProfileVC = Configurator.configuratorDetailInfoProfile(user: user)
+        navigationController?.pushViewController(detailInfoProfileVC, animated: true)
+    }
 }
 
 extension PageProfileViewController: PhotosGalleryProfileViewCellDelegate {
