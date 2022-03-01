@@ -18,4 +18,20 @@ struct DetailInfoProfileModel {
         var familyStatus: String?
         var followers: String?
     }
+    
+    struct BasicInfoModel: BasicInfoDetailInfoProfileCellViewModelType {
+        var homeTown: String?
+        var language: String?
+        var parents: String?
+        var siblings: String?
+        var children: String?
+        
+        var isView: Bool {
+            (homeTown != nil) ||
+            (language != nil) ||
+            (parents != nil) ||
+            (siblings != nil) ||
+            (children != nil)
+        }
+    }
 }

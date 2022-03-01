@@ -23,7 +23,7 @@ struct UserResponse: Decodable {
     let screenName: String?
     let sex: Int?
     let birthdayData: String?
-    let HomeTown: String?
+    let homeTown: String?
     let status: String?
     let photoUrl: String?
     let followersCount: Int?
@@ -33,6 +33,8 @@ struct UserResponse: Decodable {
     let lastSeen: LastSeen?
     let city: City?
     let relation: RelationUser?
+    let personal: PersonalInfo?
+    let relatives: [RelativesInfo]?
     
     var isOnline: Bool {
         return online == 1
@@ -58,10 +60,10 @@ struct UserResponse: Decodable {
         case canAccessClosed = "can_access_closed"
         
         //MARK: - option property coding keys
-        case sex, status, online, city, relation
+        case sex, status, online, city, relation, personal, relatives
         case screenName = "screen_name"
         case birthdayData = "bdate"
-        case HomeTown = "home_town"
+        case homeTown = "home_town"
         case photoUrl = "photo_100"
         case followersCount = "followers_count"
         case universityName = "university_name"
@@ -104,6 +106,23 @@ enum RelationUser: Int, Decodable {
             case .none: return nil
         }
     }
+}
+
+struct PersonalInfo: Decodable {
+    let langs: [String]?
+}
+
+struct RelativesInfo: Decodable {
+    let id: Int?
+    let name: String?
+    let type: RelativesType
+}
+
+enum RelativesType: String, Decodable {
+    case child
+    case sibling
+    case parent
+    case grandparent
 }
 
 @propertyWrapper

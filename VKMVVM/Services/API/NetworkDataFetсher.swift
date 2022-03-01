@@ -9,14 +9,22 @@ import Foundation
 
 enum DataFetcherError: ErrorProtocol {
     case NotValidData(String)
+    case UserNotPersonal
+    case NotValidError
     
     var message: String {
         switch self {
             case .NotValidData(let method):
                 return "С сервера по запросу '\(method)' получены не валидные данные!"
+            case .UserNotPersonal:
+                return ""
+            case .NotValidError:
+                return ""
         }
     }
 }
+
+extension DataFetcherError: Equatable {}
 
 protocol DataFetcher {
     typealias DataFetcherCompletion<T> = (Result<T, Error>) -> Void
@@ -73,15 +81,26 @@ struct NetworkDataFetcher: DataFetcher {
                 return
             }
             if let data = data {
-                if let response = try? JSONDecoder().decode(response.self, from: data) {
+                do {
+                    let response = try JSONDecoder().decode(response.self, from: data)
                     completion(.success(response))
-                } else {
+                } catch DecodingError.typeMismatch(_, let context) {
+                    if context.codingPath.contains(where: { $0.stringValue == "personal" }) {
+                        completion(.failure(DataFetcherError.UserNotPersonal))
+                    }
+                } catch is DecodingError {
+                    let json = try! JSONSerialization.jsonObject(with: data, options: [])
+                    print(json)
+                    completion(.failure(DataFetcherError.NotValidData(path.rawValue)))
+                } catch {
                     if let errorResponse = try? JSONDecoder().decode(ErrorResponseWrapper.self, from: data) {
                         completion(.failure(errorResponse.error))
                     } else {
-                        completion(.failure(DataFetcherError.NotValidData(path.rawValue)))
+                        completion(.failure(DataFetcherError.NotValidError))
                     }
                 }
+            } else {
+                completion(.failure(DataFetcherError.NotValidData(path.rawValue)))
             }
         }
     }

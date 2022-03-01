@@ -41,6 +41,7 @@ class PageProfileViewModel {
     private var screenName: String?
     private var isClosePage: Bool?
     private var isDeactivated: Bool = false
+    private var isNotPersonalValue: Bool = false
     
     private var headerModel: HeaderProfileCellModel?
     private var briefUserInfoModel: BriefUserInfoViewModelType?
@@ -64,7 +65,11 @@ class PageProfileViewModel {
     
     //MARK: - methods for get data from API
     private func getProfileInformation() {
-        let fieldsParams = UserRequestFieldsParams.allCases
+        var fieldsParams = UserRequestFieldsParams.allCases
+        if isNotPersonalValue,
+           let index = fieldsParams.firstIndex(of: .personal) {
+            fieldsParams.remove(at: index)
+        }
         let request = UserRequestParams(userIds: userId,
                                         fields: fieldsParams)
         dispatchGroup.enter()
@@ -82,6 +87,10 @@ class PageProfileViewModel {
                         self.formatterBriefUserInfo(user: response)
                     }
                 case .failure(let error):
+                    if (error as? DataFetcherError) == .UserNotPersonal {
+                        self.isNotPersonalValue = true
+                        self.getProfileInformation()
+                    }
                     self.delegate?.showError(error: error)
             }
             self.dispatchGroup.leave()
@@ -169,7 +178,7 @@ class PageProfileViewModel {
     
     private func formatterBriefUserInfo(user: UserResponse) {
         let followes = user.followersCount != nil ? String(user.followersCount!) : ""
-        briefUserInfoModel = BriefUserInfoCellModel(city: user.HomeTown,
+        briefUserInfoModel = BriefUserInfoCellModel(city: user.homeTown,
                                                    education: user.universityName,
                                                    work: nil,
                                                    followes: followes)

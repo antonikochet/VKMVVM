@@ -72,6 +72,8 @@
 		A59BF093276A301F0004F343 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59BF092276A301F0004F343 /* AuthViewController.swift */; };
 		A59BF095276A52390004F343 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59BF094276A52390004F343 /* API.swift */; };
 		A59BF09A276A534D0004F343 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59BF099276A534D0004F343 /* APIManager.swift */; };
+		A59CF92027C43D1400E584F0 /* BasicInfoDetailInfoProfileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59CF91F27C43D1400E584F0 /* BasicInfoDetailInfoProfileViewCell.swift */; };
+		A59CF92227C440C900E584F0 /* BasicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59CF92127C440C900E584F0 /* BasicInfoView.swift */; };
 		A59D3F24277360D9007D1AA4 /* ElementBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59D3F23277360D8007D1AA4 /* ElementBottomView.swift */; };
 		A5C73176279C9B830029E080 /* NetworkDataFetсher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C73175279C9B830029E080 /* NetworkDataFetсher.swift */; };
 		A5C73179279CB0650029E080 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C73178279CB0650029E080 /* ErrorResponse.swift */; };
@@ -177,6 +179,8 @@
 		A59BF092276A301F0004F343 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		A59BF094276A52390004F343 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		A59BF099276A534D0004F343 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		A59CF91F27C43D1400E584F0 /* BasicInfoDetailInfoProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoDetailInfoProfileViewCell.swift; sourceTree = "<group>"; };
+		A59CF92127C440C900E584F0 /* BasicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoView.swift; sourceTree = "<group>"; };
 		A59D3F23277360D8007D1AA4 /* ElementBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementBottomView.swift; sourceTree = "<group>"; };
 		A5C73175279C9B830029E080 /* NetworkDataFetсher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkDataFetсher.swift"; sourceTree = "<group>"; };
 		A5C73178279CB0650029E080 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
@@ -845,6 +849,7 @@
 				A524F2AA27A5EC110058F74A /* PhotosViewCell.swift in Sources */,
 				A59183E2277F2A1E005BE463 /* StaticSizesNewsFeedCell.swift in Sources */,
 				A524F2A027A56BC10058F74A /* HeaderCell.swift in Sources */,
+				A59CF92027C43D1400E584F0 /* BasicInfoDetailInfoProfileViewCell.swift in Sources */,
 				A5C73179279CB0650029E080 /* ErrorResponse.swift in Sources */,
 				A5D4AB8D278EF5DB0045E333 /* DetailGalleryPhotosViewModel.swift in Sources */,
 				A59CF92227C440C900E584F0 /* BasicInfoView.swift in Sources */,

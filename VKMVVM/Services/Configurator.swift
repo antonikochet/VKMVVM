@@ -81,6 +81,7 @@ class Configurator {
         let viewModel = DetailInfoProfileViewModel(user)
         let VC = DetailInfoProfileViewController()
         VC.viewModel = viewModel
+        viewModel.delegate = VC
         return VC
     }
 }

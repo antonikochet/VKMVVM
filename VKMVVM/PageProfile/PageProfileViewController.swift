@@ -29,11 +29,11 @@ class PageProfileViewController: UIViewController {
         tableView.delegate = self
         navigationItem.backButtonTitle = ""
         tableView.fillSuperview()
+        viewModel?.loadProfileInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel?.loadProfileInfo()
         setupRightBarButton()
     }
     
