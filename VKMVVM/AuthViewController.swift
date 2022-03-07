@@ -30,11 +30,23 @@ class AuthViewController: UIViewController {
         return label
     }()
     
+    private let repeatRequestButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Повторить вход", for: .normal)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
+        button.addTarget(self, action: #selector(singIn), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(authButton)
         view.addSubview(errorLabel)
+        view.addSubview(repeatRequestButton)
         authButton.addTarget(self, action: #selector(singIn), for: .touchUpInside)
         NSLayoutConstraint.activate([
             authButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -45,7 +57,12 @@ class AuthViewController: UIViewController {
             errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             errorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            errorLabel.heightAnchor.constraint(equalToConstant: 50)])
+            errorLabel.heightAnchor.constraint(equalToConstant: 50),
+            
+            repeatRequestButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            repeatRequestButton.topAnchor.constraint(equalTo: errorLabel.bottomAnchor, constant: 16),
+            repeatRequestButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2),
+            repeatRequestButton.heightAnchor.constraint(equalToConstant: 60)])
     }
     
     @objc private func singIn() {
@@ -55,6 +72,7 @@ class AuthViewController: UIViewController {
     func showError() {
         authButton.isHidden = true
         errorLabel.isHidden = false
+        repeatRequestButton.isHidden = false
     }
 }
 
