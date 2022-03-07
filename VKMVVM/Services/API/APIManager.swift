@@ -15,8 +15,6 @@ protocol Networing {
 
 class APIManager: Networing {
     
-    static let shader = APIManager()
-    
     func request(path: APIMethods, params: Parametrs, completion: @escaping (Data?, Error?) -> Void) {
         guard let token = AuthService.shared.token else { return }
         var allParams = params
@@ -24,7 +22,8 @@ class APIManager: Networing {
         allParams["v"] = API.version
         let url = createURL(from: path, params: allParams)
         
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 3
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard error == nil else {
                 completion(nil, error!)

@@ -22,4 +22,16 @@ extension UIViewController {
         
         present(alertVC, animated: true, completion: nil)
     }
+    
+    func showErrorAlert(message: String?, completion: @escaping () -> Void) {
+        let alertVC = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        
+        let alertOk = UIAlertAction(title: "OK!", style: .default) { _ in
+            completion()
+        }
+        
+        alertVC.addAction(alertOk)
+        
+        present(alertVC, animated: true, completion: nil)
+    }
 }

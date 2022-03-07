@@ -18,20 +18,43 @@ class AuthViewController: UIViewController {
         return button
     }()
     
+    private let errorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Ошибка\nПроверьте интернет!"
+        label.numberOfLines = 2
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.textAlignment = .center
+        label.textColor = .red
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(authButton)
+        view.addSubview(errorLabel)
         authButton.addTarget(self, action: #selector(singIn), for: .touchUpInside)
         NSLayoutConstraint.activate([
             authButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             authButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             authButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5),
-            authButton.heightAnchor.constraint(equalToConstant: 50)])
+            authButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            errorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            errorLabel.heightAnchor.constraint(equalToConstant: 50)])
     }
     
     @objc private func singIn() {
         AuthService.shared.wakeUpSession()
+    }
+    
+    func showError() {
+        authButton.isHidden = true
+        errorLabel.isHidden = false
     }
 }
 

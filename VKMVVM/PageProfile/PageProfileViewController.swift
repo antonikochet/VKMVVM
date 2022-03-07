@@ -22,11 +22,18 @@ class PageProfileViewController: UIViewController {
         return tableView
     }()
     
+    private let refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        refresh.addTarget(self, action: #selector(refreshPage), for: .valueChanged)
+        return refresh
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.refreshControl = refreshControl
         navigationItem.backButtonTitle = ""
         tableView.fillSuperview()
         viewModel?.loadProfileInfo()
@@ -49,6 +56,10 @@ class PageProfileViewController: UIViewController {
             AuthService.shared.forceLogout()
         }
     }
+    
+    @objc private func refreshPage() {
+        viewModel?.loadProfileInfo()
+    }
 }
 
 extension PageProfileViewController: PageProfileViewModelDelegate {
@@ -56,6 +67,7 @@ extension PageProfileViewController: PageProfileViewModelDelegate {
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.navigationItem.title = self.viewModel?.nickName
+            self.refreshControl.endRefreshing()
         }
     }
 
@@ -67,6 +79,13 @@ extension PageProfileViewController: PageProfileViewModelDelegate {
     }
     func showError(error: Error) {
         print(error)
+        if let error = error as? DataFetcherError {
+            DispatchQueue.main.async {
+                self.showErrorAlert(message: error.message) {
+                }
+            }
+        }
+        
     }
 }
 

@@ -75,7 +75,10 @@ extension SceneDelegate: AuthServiceDelegate {
     }
     
     func authServiceSignInDidFail() {
-        
+        if let vc = window?.rootViewController as? AuthViewController {
+            window?.rootViewController?.view.isHidden = false
+            vc.showError()
+        }
     }
     
     func forceLogout() {

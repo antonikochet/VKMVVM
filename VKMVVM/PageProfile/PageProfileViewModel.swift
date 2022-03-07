@@ -42,6 +42,7 @@ class PageProfileViewModel {
     private var isClosePage: Bool?
     private var isDeactivated: Bool = false
     private var isNotPersonalValue: Bool = false
+    private var isError: Bool = false
     
     private var headerModel: HeaderProfileCellModel?
     private var briefUserInfoModel: BriefUserInfoViewModelType?
@@ -90,8 +91,9 @@ class PageProfileViewModel {
                     if (error as? DataFetcherError) == .UserNotPersonal {
                         self.isNotPersonalValue = true
                         self.getProfileInformation()
+                        return
                     }
-                    self.delegate?.showError(error: error)
+                    self.handlerError(error)
             }
             self.dispatchGroup.leave()
         }
@@ -115,9 +117,8 @@ class PageProfileViewModel {
                             self.dispatchGroup.leave()
                             return
                         }
-                        self.delegate?.showError(error: error)
                     }
-                    self.delegate?.showError(error: error)
+                    self.handlerError(error)
             }
             self.dispatchGroup.leave()
         }
@@ -159,11 +160,22 @@ class PageProfileViewModel {
                             self.dispatchGroup.leave()
                             return
                         }
-                        self.delegate?.showError(error: error)
                     }
-                    self.delegate?.showError(error: error)
+                    self.handlerError(error)
             }
             self.dispatchGroup.leave()
+        }
+    }
+    
+    private func handlerError(_ error: Error) {
+        if let error = error as? DataFetcherError,
+           error == .NotConnectToInternet,
+            !isError {
+            isError = true
+            delegate?.showError(error: error)
+        } else if let error = error as? DataFetcherError,
+                  error != .NotConnectToInternet {
+            delegate?.showError(error: error)
         }
     }
     
@@ -270,6 +282,7 @@ extension PageProfileViewModel: PageProfileViewModelType {
     }
     
     func loadProfileInfo() {
+        self.isError = false
         self.getProfileInformation()
         self.getFriends()
         self.getFullPhotosUser()

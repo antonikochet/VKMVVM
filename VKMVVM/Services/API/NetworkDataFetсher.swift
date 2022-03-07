@@ -11,6 +11,7 @@ enum DataFetcherError: ErrorProtocol {
     case NotValidData(String)
     case UserNotPersonal
     case NotValidError
+    case NotConnectToInternet
     
     var message: String {
         switch self {
@@ -20,6 +21,8 @@ enum DataFetcherError: ErrorProtocol {
                 return ""
             case .NotValidError:
                 return ""
+            case .NotConnectToInternet:
+                return "Нет подключения к интернету!"
         }
     }
 }
@@ -40,6 +43,13 @@ protocol DataFetcher {
 }
 
 struct NetworkDataFetcher: DataFetcher {
+    
+    private var network: Networing
+    
+    init(network: Networing = APIManager()) {
+        self.network = network
+    }
+    
     func getNewsFeed(parametrs: RequestParamsProtocol, completion: @escaping DataFetcherCompletion<NewsFeedResponseWrapped>) {
         makeRequest(path: .getNewsFeed, params: parametrs.generateParametrsForRequest(), response: NewsFeedResponseWrapped.self, completion: completion)
     }
@@ -75,8 +85,13 @@ struct NetworkDataFetcher: DataFetcher {
     
     //MARK: - private method for universal make request for all methods API
     private func makeRequest<T: Decodable>(path: APIMethods, params: Parametrs, response: T.Type, completion: @escaping DataFetcherCompletion<T>) {
-        APIManager.shader.request(path: path, params: params) { data, error in
+        network.request(path: path, params: params) { data, error in
             guard error == nil else {
+                if (error as? URLError)?.code == URLError.notConnectedToInternet ||
+                    (error as? URLError)?.code == URLError.timedOut {
+                    completion(.failure(DataFetcherError.NotConnectToInternet))
+                    return
+                }
                 completion(.failure(error!))
                 return
             }

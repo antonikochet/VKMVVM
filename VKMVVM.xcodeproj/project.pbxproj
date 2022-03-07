@@ -14,7 +14,6 @@
 		A50818ED2788CC2C00144AB9 /* TopRecordingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50818EC2788CC2C00144AB9 /* TopRecordingModel.swift */; };
 		A5167D7D27A561EB00B19B1F /* PhotosGalleryProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5167D7C27A561EB00B19B1F /* PhotosGalleryProfileTableViewController.swift */; };
 		A5167D8027A5626800B19B1F /* AlbumsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5167D7F27A5626800B19B1F /* AlbumsViewCell.swift */; };
-		A5167D8227A5642900B19B1F /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = A5167D8127A5642900B19B1F /* todo.txt */; };
 		A5167D8427A565C800B19B1F /* StaticSizesUniversalViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5167D8327A565C800B19B1F /* StaticSizesUniversalViews.swift */; };
 		A524F2A027A56BC10058F74A /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F29F27A56BC10058F74A /* HeaderCell.swift */; };
 		A524F2A227A571C00058F74A /* AlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524F2A127A571C00058F74A /* AlbumViewCell.swift */; };
@@ -121,7 +120,6 @@
 		A50818EC2788CC2C00144AB9 /* TopRecordingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRecordingModel.swift; sourceTree = "<group>"; };
 		A5167D7C27A561EB00B19B1F /* PhotosGalleryProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosGalleryProfileTableViewController.swift; sourceTree = "<group>"; };
 		A5167D7F27A5626800B19B1F /* AlbumsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsViewCell.swift; sourceTree = "<group>"; };
-		A5167D8127A5642900B19B1F /* todo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		A5167D8327A565C800B19B1F /* StaticSizesUniversalViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSizesUniversalViews.swift; sourceTree = "<group>"; };
 		A524F29F27A56BC10058F74A /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		A524F2A127A571C00058F74A /* AlbumViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewCell.swift; sourceTree = "<group>"; };
@@ -396,7 +394,6 @@
 				A56C7C912768FA0700374BFC /* LaunchScreen.storyboard */,
 				A56C7C942768FA0700374BFC /* Info.plist */,
 				A59BF092276A301F0004F343 /* AuthViewController.swift */,
-				A5167D8127A5642900B19B1F /* todo.txt */,
 			);
 			path = VKMVVM;
 			sourceTree = "<group>";
@@ -832,7 +829,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A56C7C932768FA0700374BFC /* LaunchScreen.storyboard in Resources */,
-				A5167D8227A5642900B19B1F /* todo.txt in Resources */,
 				A592BDB127D0131D005CB754 /* README.md in Resources */,
 				A56C7C902768FA0700374BFC /* Assets.xcassets in Resources */,
 			);
