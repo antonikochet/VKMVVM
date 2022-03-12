@@ -208,7 +208,7 @@ extension PageProfileViewController: BriefUserInfoViewCellDelegate {
     func showDetailInfoUser() {
         guard let user = viewModel?.getUserResponseForDetailInfoProfile() else { return }
         let detailInfoProfileVC = Configurator.configuratorDetailInfoProfile(user: user)
-        navigationController?.pushViewController(detailInfoProfileVC, animated: true)
+        present(detailInfoProfileVC, animated: true, completion: nil)
     }
 }
 

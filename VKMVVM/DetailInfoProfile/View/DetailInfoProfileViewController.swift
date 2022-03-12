@@ -25,6 +25,9 @@ class DetailInfoProfileViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Подробнее"
+        let backButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
+        navigationItem.rightBarButtonItem = backButton
         tableView.register(StatusDetailInfoProfileViewCell.self,
                            forCellReuseIdentifier: StatusDetailInfoProfileViewCell.identifier)
         tableView.register(BriefDetailInfoProfileViewCell.self,
@@ -79,6 +82,11 @@ class DetailInfoProfileViewController: UITableViewController {
             case .none:
                 return 0
         }
+    }
+    
+    @objc
+    private func dismissView() {
+        dismiss(animated: true)
     }
 }
 

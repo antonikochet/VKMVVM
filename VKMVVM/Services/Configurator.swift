@@ -77,12 +77,13 @@ class Configurator {
         return vc
     }
     
-    static func configuratorDetailInfoProfile(user: UserResponse) -> DetailInfoProfileViewController {
+    static func configuratorDetailInfoProfile(user: UserResponse) -> UIViewController {
         let viewModel = DetailInfoProfileViewModel(user)
         let VC = DetailInfoProfileViewController()
+        let navVC = UINavigationController(rootViewController: VC)
         VC.viewModel = viewModel
         viewModel.delegate = VC
-        return VC
+        return navVC
     }
 }
 
