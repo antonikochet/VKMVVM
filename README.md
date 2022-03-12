@@ -30,6 +30,7 @@ View the app
 
 ![](screenshots/workApp.gif)
 ![](screenshots/like.gif)
+![](screenshots/detailInfoProfile.gif)
 
 ## Received knowledge
 
