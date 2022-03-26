@@ -11,16 +11,14 @@ protocol FollowerTableViewModelType {
     var count: Int { get }
     func getItem(at index: Int) -> FollowerTableCellViewModelType
     func startLoadData()
-}
-
-protocol FollowerTableViewModelDelegate: AnyObject {
-    func didLoadData()
-    func showError(_ error: Error)
+    
+    var didLoadData: (() -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class FollowerTableViewModel {
-    
-    weak var delegate: FollowerTableViewModelDelegate?
+    var didLoadData: (() -> Void)?
+    var showError: ((String) -> Void)?
     
     private var cells: [FollowerTableCellViewModelType] = []
     private var dataFetcher: DataFetcher
@@ -42,9 +40,9 @@ class FollowerTableViewModel {
                         return FollowerTableCellModel(iconUrl: item.photoUrl,
                                                       fullName: fullName)
                     }
-                    self.delegate?.didLoadData()
+                    self.didLoadData?()
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }

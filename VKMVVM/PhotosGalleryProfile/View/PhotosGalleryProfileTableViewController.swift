@@ -12,6 +12,9 @@ protocol PhotosGalleryProfileViewModelType {
     func getAlbums() -> AlbumsCellViewModelType?
     func getPhotos() -> PhotosCellViewModelType?
     func getPhotosForDetailShow() -> [Photo]
+    
+    var didLoadData: (() -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class PhotosGalleryProfileTableViewController: UITableViewController {
@@ -20,12 +23,24 @@ class PhotosGalleryProfileTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configurateViewModel()
         tableView.register(AlbumsViewCell.self, forCellReuseIdentifier: AlbumsViewCell.identifier)
         tableView.register(PhotosViewCell.self, forCellReuseIdentifier: PhotosViewCell.identifier)
         viewModel?.startLoadData()
         navigationItem.title = "Фотографии"
     }
 
+    private func configurateViewModel() {
+        viewModel?.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        viewModel?.showError = { message in
+            print(message)
+        }
+    }
+    
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
@@ -62,16 +77,6 @@ class PhotosGalleryProfileTableViewController: UITableViewController {
             default:
                 return 0
         }
-    }
-}
-
-extension PhotosGalleryProfileTableViewController: PhotosGalleryProfileDelegate {
-    func didLoadData() {
-        self.tableView.reloadData()
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
     }
 }
 

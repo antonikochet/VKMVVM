@@ -22,8 +22,20 @@ class FriendsTableTableViewController: UITableViewController {
         tableView.register(FriendTableViewCell.self, forCellReuseIdentifier: FriendTableViewCell.identifier)
         tableView.refreshControl = refresh
         navigationItem.title = "Друзья"
+        configureViewModel()
     }
 
+    private func configureViewModel() {
+        viewModel?.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        viewModel?.showError = { message in
+            print(message)
+        }
+    }
+    
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,15 +68,5 @@ class FriendsTableTableViewController: UITableViewController {
     // MARK: - func for refrash control table view
     @objc private func refreshFriends() {
         viewModel?.refreshFriends()
-    }
-}
-
-extension FriendsTableTableViewController: FriendsTableViewModelDelegate {
-    func didLoadData() {
-        tableView.reloadData()
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
     }
 }

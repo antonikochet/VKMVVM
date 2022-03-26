@@ -36,12 +36,35 @@ class PageProfileViewController: UIViewController {
         tableView.refreshControl = refreshControl
         navigationItem.backButtonTitle = ""
         tableView.fillSuperview()
+        configureViewModel()
         viewModel?.loadProfileInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupRightBarButton()
+    }
+    
+    private func configureViewModel() {
+        viewModel?.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.navigationItem.title = self.viewModel?.nickName
+                self.refreshControl.endRefreshing()
+            }
+        }
+        viewModel?.showError = { message in
+            DispatchQueue.main.async {
+                self.showErrorAlert(message: message) {
+                }
+            }
+        }
+        viewModel?.didPhotosProfile = { photos in
+            DispatchQueue.main.async {
+                let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: 0)
+                self.navigationController?.pushViewController(galleryVC, animated: true)
+            }
+        }
     }
     
     private func setupRightBarButton() {
@@ -59,33 +82,6 @@ class PageProfileViewController: UIViewController {
     
     @objc private func refreshPage() {
         viewModel?.loadProfileInfo()
-    }
-}
-
-extension PageProfileViewController: PageProfileViewModelDelegate {
-    func didLoadData() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.navigationItem.title = self.viewModel?.nickName
-            self.refreshControl.endRefreshing()
-        }
-    }
-
-    func didPhotosProfile(photos: [Photo]) {
-        DispatchQueue.main.async {
-            let galleryVC = Configurator.configuratorGalleryPhotos(photos: photos, beginIndexPhoto: 0)
-            self.navigationController?.pushViewController(galleryVC, animated: true)
-        }
-    }
-    func showError(error: Error) {
-        print(error)
-        if let error = error as? DataFetcherError {
-            DispatchQueue.main.async {
-                self.showErrorAlert(message: error.message) {
-                }
-            }
-        }
-        
     }
 }
 

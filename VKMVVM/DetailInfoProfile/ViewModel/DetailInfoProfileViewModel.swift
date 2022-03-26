@@ -7,14 +7,10 @@
 
 import Foundation
 
-protocol DetailInfoProfileViewModelDelegate: AnyObject {
-    func dataDidLoad()
-    func showError(_ error: Error)
-}
-
 class DetailInfoProfileViewModel {
     
-    weak var delegate: DetailInfoProfileViewModelDelegate?
+    var didLoadData: (() -> Void)?
+    var showError: ((String) -> Void)?
     
     private var dataFetcher: DataFetcher
     
@@ -43,7 +39,7 @@ class DetailInfoProfileViewModel {
                                                               familyStatus: user.relation?.getStatus(sex: user.sex),
                                                               followers: String(user.followersCount ?? 0))
         formatterBasicInfoUser(relativesUser: [:])
-        delegate?.dataDidLoad()
+        didLoadData?()
     }
     
     private func formatterBasicInfoUser(relativesUser: [Int: String]) {
@@ -80,9 +76,9 @@ class DetailInfoProfileViewModel {
                         relativesUser.updateValue("\(user.firstName) \(user.lastName)", forKey: user.id)
                     }
                     self.formatterBasicInfoUser(relativesUser: relativesUser)
-                    self.delegate?.dataDidLoad()
+                    self.didLoadData?()
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }

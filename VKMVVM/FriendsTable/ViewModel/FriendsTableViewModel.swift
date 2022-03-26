@@ -7,19 +7,18 @@
 
 import Foundation
 
-protocol FriendsTableViewModelDelegate: AnyObject {
-    func didLoadData()
-    func showError(_ error: Error)
-}
-
 protocol FriendsTableViewModelType{
     var count: Int { get }
     func getItem(by index: Int) -> FriendTableCellViewModelType
     func refreshFriends()
+    
+    var didLoadData: (() -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class FriendsTableViewModel {
-    weak var delegate: FriendsTableViewModelDelegate?
+    var didLoadData: (() -> Void)?
+    var showError: ((String) -> Void)?
     
     private var dataFetcher: DataFetcher
     
@@ -51,9 +50,9 @@ class FriendsTableViewModel {
                 case .failure(let error):
                     if let deletedError = error as? ErrorResponse {
                         guard deletedError.errorCode != 30 else { return }
-                        self.delegate?.showError(error)
+                        self.showError?(deletedError.errorMessage)
                     }
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }
@@ -70,7 +69,7 @@ class FriendsTableViewModel {
                                         isOnline: user.isOnline,
                                         isOnlineMobile: user.isOnlineMobile)
         }
-        delegate?.didLoadData()
+        didLoadData?()
     }
 
     private func gettingExtraData(user: UserResponse) -> String? {

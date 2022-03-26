@@ -7,14 +7,9 @@
 
 import Foundation
 
-protocol PhotosGalleryProfileDelegate: AnyObject {
-    func didLoadData()
-    func showError(_ error: Error)
-}
-
 class PhotosGalleryProfileViewModel {
-    
-    weak var delegate: PhotosGalleryProfileDelegate?
+    var didLoadData: (() -> Void)?
+    var showError: ((String) -> Void)?
     
     private var dataFetcher: DataFetcher
     private var userId: String?
@@ -40,7 +35,7 @@ class PhotosGalleryProfileViewModel {
                 case .success(let response):
                     self.albumsResponse = response.response
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
             self.dispatchGroup.leave()
         }
@@ -72,7 +67,7 @@ class PhotosGalleryProfileViewModel {
                             self.formatterPhotoList()
                     }
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
             self.dispatchGroup.leave()
         }
@@ -111,7 +106,7 @@ extension PhotosGalleryProfileViewModel: PhotosGalleryProfileViewModelType {
         self.getAlbumsProfile()
         self.getAllPhotosProfile(offset: 0)
         dispatchGroup.notify(queue: DispatchQueue.main) {
-            self.delegate?.didLoadData()
+            self.didLoadData?()
         }
     }
 }

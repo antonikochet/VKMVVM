@@ -16,19 +16,13 @@ protocol NewsFeedViewModelType {
     func revealPost(_ id: Int)
     func getPhotosFromItems(by index: Int) -> [Photo]
     func changedLikePost(by index: Int)
-}
-
-protocol NewsFeedViewModelDelegate: AnyObject {
-    func willLoadData()
-    func didLoadData()
-    func changeLike(viewModel: NewsFeedModelItemType, index: Int)
-    func showError(_ error: Error)
+    
+    var didLoadData: (() -> Void)? { get set }
+    var changeLike: ((NewsFeedModelItemType, Int) -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class NewsFeedViewModel {
-    
-    weak var delegate: NewsFeedViewModelDelegate?
-    
     private var cells: [NewsFeedModelItemType] = []
     private var responseData: NewsFeedResponse?
     private var dataFetcher: DataFetcher
@@ -36,6 +30,9 @@ class NewsFeedViewModel {
     
     private var revealPosts: [Int] = []
     
+    var didLoadData: (() -> Void)?
+    var changeLike: ((NewsFeedModelItemType, Int) -> Void)?
+    var showError: ((String) -> Void)?
     
     private var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -57,9 +54,9 @@ class NewsFeedViewModel {
                 case .success(let response):
                     self.updateResponseData(response.response)
                     self.viewData()
-                    self.delegate?.didLoadData()
+                    self.didLoadData?()
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }
@@ -80,10 +77,10 @@ class NewsFeedViewModel {
                         viewModel.isLiked = !viewModel.isLiked
                         self.cells[indexCell] = viewModel
                         viewModel.isChangedLike = true
-                        self.delegate?.changeLike(viewModel: viewModel, index: indexCell)
+                        self.changeLike?(viewModel, indexCell)
                     }
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }
@@ -204,7 +201,7 @@ extension NewsFeedViewModel: NewsFeedViewModelType {
     func revealPost(_ id: Int) {
         revealPosts.append(id)
         viewData()
-        delegate?.didLoadData()
+        didLoadData?()
     }
     
     func getFirstData() {

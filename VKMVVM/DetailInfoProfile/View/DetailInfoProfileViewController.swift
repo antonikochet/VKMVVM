@@ -10,6 +10,9 @@ import UIKit
 protocol DetailInfoProfileViewModelType {
     var count: Int { get }
     func getDataForCell(at index: Int) -> DetailInfoProfileCell
+    
+    var didLoadData: (() -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 enum DetailInfoProfileCell {
@@ -28,6 +31,7 @@ class DetailInfoProfileViewController: UITableViewController {
         navigationItem.title = "Подробнее"
         let backButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
         navigationItem.rightBarButtonItem = backButton
+        configurateViewModel()
         tableView.register(StatusDetailInfoProfileViewCell.self,
                            forCellReuseIdentifier: StatusDetailInfoProfileViewCell.identifier)
         tableView.register(BriefDetailInfoProfileViewCell.self,
@@ -36,6 +40,17 @@ class DetailInfoProfileViewController: UITableViewController {
                            forCellReuseIdentifier: BasicInfoDetailInfoProfileViewCell.identifier)
     }
 
+    private func configurateViewModel() {
+        viewModel?.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        viewModel?.showError = { message in
+            print(message)
+        }
+    }
+    
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel?.count ?? 0
@@ -87,17 +102,5 @@ class DetailInfoProfileViewController: UITableViewController {
     @objc
     private func dismissView() {
         dismiss(animated: true)
-    }
-}
-
-extension DetailInfoProfileViewController: DetailInfoProfileViewModelDelegate {
-    func dataDidLoad() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
     }
 }

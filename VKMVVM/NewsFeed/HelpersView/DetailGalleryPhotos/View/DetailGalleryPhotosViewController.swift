@@ -111,6 +111,21 @@ class DetailGalleryPhotosViewController: UIPageViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
+    private func configureViewModel() {
+        viewModel.changeLike = { viewModel, index in
+            DispatchQueue.main.async {
+                guard let viewController = self.viewControllers?.first as? DetailPhotoViewController,
+                      viewController.pageNumber == index else { return }
+                self.likes.set(text: viewModel.likes,
+                          isLiked: viewModel.isLiked,
+                          isChangedLike: viewModel.isChangedLike)
+            }
+        }
+        viewModel.showError = { message in
+            print(message)
+        }
+    }
+    
     //MARK: - setups and set content view
     private func setupNavBarAndBottomView() {
         view.addSubview(topView)
@@ -228,23 +243,4 @@ extension DetailGalleryPhotosViewController: UIPageViewControllerDelegate {
             set(at: index)
         }
     }
-}
-
-extension DetailGalleryPhotosViewController: DetailGalleryPhotosViewModelDelegate {
-    func changeLike(viewModel: DetailPhotoViewModelType, index: Int) {
-        DispatchQueue.main.async {
-            guard let viewController = self.viewControllers?.first as? DetailPhotoViewController,
-                  viewController.pageNumber == index else { return }
-            self.likes.set(text: viewModel.likes,
-                      isLiked: viewModel.isLiked,
-                      isChangedLike: viewModel.isChangedLike)
-        }
-        
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
-    }
-    
-    
 }

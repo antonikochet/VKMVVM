@@ -34,6 +34,8 @@ class NewsFeedViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.addSubview(refreshControl)
+        configureViewModel()
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -51,6 +53,24 @@ class NewsFeedViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.hidesBarsOnSwipe = false
+    }
+    
+    private func configureViewModel() {
+        viewModel.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
+        viewModel.showError = { message in
+            print(message)
+        }
+        viewModel.changeLike = { viewModel, index in
+            DispatchQueue.main.async {
+                let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as! NewsFeedViewCell
+                cell.set(viewModel)
+            }
+        }
     }
     
     @objc private func refreshFeed() {
@@ -82,31 +102,6 @@ extension NewsFeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cellViewModel = viewModel.getItem(by: indexPath.row)
         return cellViewModel?.contentPost.sizes.totalHeight ?? 0
-    }
-}
-
-extension NewsFeedViewController: NewsFeedViewModelDelegate {
-    func willLoadData() {
-        print(#function)
-    }
-    
-    func didLoadData() {
-        print(#function)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.refreshControl.endRefreshing()
-        }
-    }
-    
-    func changeLike(viewModel: NewsFeedModelItemType, index: Int) {
-        DispatchQueue.main.async {
-            let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as! NewsFeedViewCell
-            cell.set(viewModel)
-        }
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
     }
 }
 

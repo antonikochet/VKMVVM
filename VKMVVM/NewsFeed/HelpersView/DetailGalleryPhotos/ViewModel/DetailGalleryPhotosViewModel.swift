@@ -12,16 +12,15 @@ protocol DetailGalleryPhotosViewModelType {
     var count: Int { get }
     func getCurrectTitle(at index: Int) -> String?
     func changedLike(at indexPhoto: Int)
-}
-
-protocol DetailGalleryPhotosViewModelDelegate: AnyObject {
-    func changeLike(viewModel: DetailPhotoViewModelType, index: Int)
-    func showError(_ error: Error)
+    
+    var changeLike: ((DetailPhotoViewModelType, Int) -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class DetailGalleryPhotosModelView {
     
-    weak var delegate: DetailGalleryPhotosViewModelDelegate?
+    var changeLike: ((DetailPhotoViewModelType, Int) -> Void)?
+    var showError: ((String) -> Void)?
     
     private var photos: [DetailPhotoViewModelType] = []
     
@@ -48,10 +47,10 @@ class DetailGalleryPhotosModelView {
                         viewModel.isLiked = !viewModel.isLiked
                         self.photos[indexCell] = viewModel
                         viewModel.isChangedLike = true
-                        self.delegate?.changeLike(viewModel: viewModel, index: indexCell)
+                        self.changeLike?(viewModel, indexCell)
                     }
                 case .failure(let error):
-                    self.delegate?.showError(error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }

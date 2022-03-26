@@ -12,7 +12,6 @@ class Configurator {
         let newsFeedVC = NewsFeedViewController()
         let newsFeedModelView = NewsFeedViewModel()
         newsFeedVC.viewModel = newsFeedModelView
-        newsFeedModelView.delegate = newsFeedVC
         return newsFeedVC
     }
     
@@ -20,7 +19,6 @@ class Configurator {
         let pageProfileVC = PageProfileViewController()
         let pageProfileViewModel = PageProfileViewModel(userId: userId)
         pageProfileVC.viewModel = pageProfileViewModel
-        pageProfileViewModel.delegate = pageProfileVC
         return pageProfileVC
     }
     
@@ -28,7 +26,6 @@ class Configurator {
         let friendsViewModel = FriendsTableViewModel(friends, userId: userId)
         let friendsVC = FriendsTableTableViewController()
         friendsVC.viewModel = friendsViewModel
-        friendsViewModel.delegate = friendsVC
         return friendsVC
     }
     
@@ -36,7 +33,6 @@ class Configurator {
         let galleryModelView = DetailGalleryPhotosModelView(photos)
         let galleryVC = DetailGalleryPhotosViewController(beginIndex: beginIndexPhoto)
         galleryVC.viewModel = galleryModelView
-        galleryModelView.delegate = galleryVC
         return galleryVC
     }
     
@@ -44,7 +40,6 @@ class Configurator {
         let followersViewModel = FollowerTableViewModel(userId: userId)
         let followersVC = FollowerTableViewController()
         followersVC.viewModel = followersViewModel
-        followersViewModel.delegate = followersVC
         return followersVC
     }
     
@@ -72,7 +67,6 @@ class Configurator {
     static func configuratorPhotosGalleryProfile(userId: String?) -> PhotosGalleryProfileTableViewController {
         let viewModel = PhotosGalleryProfileViewModel(userId: userId)
         let vc = PhotosGalleryProfileTableViewController()
-        viewModel.delegate = vc
         vc.viewModel = viewModel
         return vc
     }
@@ -82,7 +76,6 @@ class Configurator {
         let VC = DetailInfoProfileViewController()
         let navVC = UINavigationController(rootViewController: VC)
         VC.viewModel = viewModel
-        viewModel.delegate = VC
         return navVC
     }
 }

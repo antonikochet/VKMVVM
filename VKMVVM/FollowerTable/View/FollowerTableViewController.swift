@@ -14,11 +14,23 @@ class FollowerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(FollowerTableViewCell.self, forCellReuseIdentifier: FollowerTableViewCell.identifier)
+        configureViewModel()
         viewModel?.startLoadData()
         navigationItem.title = "Подписчики"
         navigationItem.largeTitleDisplayMode = .always
     }
 
+    private func configureViewModel() {
+        viewModel?.didLoadData = {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        viewModel?.showError = { message in
+            print(message)
+        }
+    }
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -38,18 +50,4 @@ class FollowerTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-}
-
-extension FollowerTableViewController: FollowerTableViewModelDelegate {
-    func didLoadData() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func showError(_ error: Error) {
-        print(error)
-    }
-    
-    
 }

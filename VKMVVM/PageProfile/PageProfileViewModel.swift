@@ -23,16 +23,16 @@ protocol PageProfileViewModelType {
     var nickName: String { get }
     var isProfileSpecificUser: Bool { get }
     var isEmptyPhotos: Bool { get }
-}
-
-protocol PageProfileViewModelDelegate: AnyObject {
-    func didLoadData()
-    func didPhotosProfile(photos: [Photo])
-    func showError(error: Error)
+    
+    var didLoadData: (() -> Void)? { get set }
+    var didPhotosProfile: (([Photo]) -> Void)? { get set }
+    var showError: ((String) -> Void)? { get set }
 }
 
 class PageProfileViewModel {
-    weak var delegate: PageProfileViewModelDelegate?
+    var didLoadData: (() -> Void)?
+    var didPhotosProfile: (([Photo]) -> Void)?
+    var showError: ((String) -> Void)?
     
     private var dataFetcher: DataFetcher
     private var dispatchGroup = DispatchGroup()
@@ -134,9 +134,9 @@ class PageProfileViewModel {
             switch result {
                 case .success(let response):
                     let photos = Array(response.response.items.reversed())
-                    self.delegate?.didPhotosProfile(photos: photos)
+                    self.didPhotosProfile?(photos)
                 case .failure(let error):
-                    self.delegate?.showError(error: error)
+                    self.showError?(error.localizedDescription)
             }
         }
     }
@@ -153,7 +153,7 @@ class PageProfileViewModel {
             switch result {
                 case .success(let responseWrapper):
                     self.formatterUserPhotos(photosResponse: responseWrapper.response)
-                    self.delegate?.didLoadData()
+                    self.didLoadData?()
                 case .failure(let error):
                     if let deletedError = error as? ErrorResponse {
                         guard deletedError.errorCode != 18, deletedError.errorCode != 30 else {
@@ -172,10 +172,10 @@ class PageProfileViewModel {
            error == .NotConnectToInternet,
             !isError {
             isError = true
-            delegate?.showError(error: error)
+            showError?(error.message)
         } else if let error = error as? DataFetcherError,
                   error != .NotConnectToInternet {
-            delegate?.showError(error: error)
+            showError?(error.message)
         }
     }
     
@@ -287,7 +287,7 @@ extension PageProfileViewModel: PageProfileViewModelType {
         self.getFriends()
         self.getFullPhotosUser()
         dispatchGroup.notify(queue: .main) {
-            self.delegate?.didLoadData()
+            self.didLoadData?()
         }
     }
     
